@@ -215,20 +215,73 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
         })
       });
 
-      const res = await response.json();
-      if (res.success && res.day) {
-        const updatedDays = trip.days.map(d =>
-          d.dayNumber === selectedDayNumber ? res.day : d
-        );
-        onUpdateTrip({ ...trip, days: updatedDays });
-        setAdaptNotice(`Day ${selectedDayNumber} successfully adapted!`);
-        setTimeout(() => setAdaptNotice(null), 3500);
+      if (response.ok) {
+        const res = await response.json();
+        if (res.success && res.day) {
+          const updatedDays = trip.days.map(d =>
+            d.dayNumber === selectedDayNumber ? res.day : d
+          );
+          onUpdateTrip({ ...trip, days: updatedDays });
+          setAdaptNotice(`Day ${selectedDayNumber} successfully adapted!`);
+          setTimeout(() => setAdaptNotice(null), 3500);
+          return;
+        }
       }
     } catch (err) {
-      console.error('Failed to replan day:', err);
+      console.warn('Backend replan endpoint unreachable, applying client adaptation:', err);
     } finally {
       setIsAdapting(false);
     }
+
+    // Client-side fallback adaptation for static deployments
+    const modifiedActivities = currentDay.activities.map((act, idx) => {
+      if (conditionType === 'rain') {
+        if (act.category === 'nature' || act.category === 'sightseeing') {
+          return {
+            ...act,
+            title: `[Indoor Safe] ${act.neighborhood} Art Gallery & Covered Arcade`,
+            description: 'Protected from the rain: Explore historic covered market halls, artisan workshops, and modern indoor galleries.',
+            category: 'art' as const,
+            notes: 'Rain-adapted indoor replacement.',
+            vibe: 'Cozy & Sheltered'
+          };
+        }
+      } else if (conditionType === 'slow_morning') {
+        if (idx === 0) {
+          return {
+            ...act,
+            time: '10:45 AM',
+            title: `Leisurely Brunch & ${act.title.replace(/^\[.*?\]\s*/, '')}`,
+            description: 'Sleep in and recharge: Enjoy specialty brew coffee and breakfast pastries before kicking off the day.',
+            duration: '1.5 hrs',
+            notes: 'Pushed later to match relaxed group rhythm.'
+          };
+        } else if (idx === 1) return { ...act, time: '01:15 PM' };
+        else if (idx === 2) return { ...act, time: '03:45 PM' };
+        else if (idx === 3) return { ...act, time: '07:30 PM' };
+      } else if (conditionType === 'budget_trim') {
+        return {
+          ...act,
+          cost: Math.max(0, Math.round(act.cost * 0.5)),
+          notes: 'Optimized for budget efficiency.'
+        };
+      }
+      return act;
+    });
+
+    const adaptedDay = {
+      ...currentDay,
+      title: conditionType === 'rain' ? `${currentDay.title} (Rain-Safe Edition)` : currentDay.title,
+      estimatedBudgetPerPerson: modifiedActivities.reduce((acc, a) => acc + (a.cost || 0), 0),
+      activities: modifiedActivities
+    };
+
+    const updatedDays = trip.days.map(d =>
+      d.dayNumber === selectedDayNumber ? adaptedDay : d
+    );
+    onUpdateTrip({ ...trip, days: updatedDays });
+    setAdaptNotice(`Day ${selectedDayNumber} successfully adapted!`);
+    setTimeout(() => setAdaptNotice(null), 3500);
   };
 
   // Total trip cost per person calculation

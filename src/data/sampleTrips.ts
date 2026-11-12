@@ -519,3 +519,141 @@ export const sampleTrips: Record<string, TripPlan> = {
     ]
   }
 };
+
+export function createFallbackTripPlan(
+  destination: string,
+  durationDays: number,
+  travelers: any[],
+  groupMode: boolean,
+  targetBudget: any = 'moderate',
+  travelStyle: string = 'Balanced Culture & Food'
+): TripPlan {
+  const isTokyo = destination.toLowerCase().includes('tokyo') || destination.toLowerCase().includes('japan');
+  const isBali = destination.toLowerCase().includes('bali') || destination.toLowerCase().includes('indonesia');
+
+  if (isTokyo && sampleTrips.tokyo) {
+    return {
+      ...sampleTrips.tokyo,
+      id: `trip-${Date.now()}`,
+      destination,
+      durationDays,
+      targetBudget,
+      travelStyle,
+      travelers: travelers.length > 0 ? travelers : sampleTrips.tokyo.travelers,
+      days: sampleTrips.tokyo.days.slice(0, durationDays)
+    };
+  }
+
+  if (isBali && sampleTrips.bali) {
+    return {
+      ...sampleTrips.bali,
+      id: `trip-${Date.now()}`,
+      destination,
+      durationDays,
+      targetBudget,
+      travelStyle,
+      travelers: travelers.length > 0 ? travelers : sampleTrips.bali.travelers,
+      days: sampleTrips.bali.days.slice(0, durationDays)
+    };
+  }
+
+  // Generic dynamic destination generator
+  const days = [];
+  const travelerNames = travelers.map(t => t.name || 'Traveler');
+
+  for (let d = 1; d <= durationDays; d++) {
+    days.push({
+      dayNumber: d,
+      date: `Day ${d}`,
+      title: `Day ${d}: ${destination} Heritage, Cuisine & Panoramas`,
+      areaSummary: 'Central & Historic Districts',
+      weather: { condition: 'Sunny & Mild', temp: '21°C / 70°F', icon: 'sun' },
+      estimatedWalkingKm: 5.2 + d * 0.4,
+      estimatedBudgetPerPerson: 55,
+      activities: [
+        {
+          id: `act-${d}-1`,
+          time: '09:30 AM',
+          title: `${destination} Landmark Historic Walking Tour`,
+          description: `Explore the celebrated architectural highlights, pedestrian squares, and heritage streets of ${destination}.`,
+          category: 'culture' as const,
+          cost: 12,
+          duration: '2.5 hrs',
+          neighborhood: 'Old Town',
+          vibe: 'Historic Sights',
+          suggestedBy: travelerNames[0] || 'Traveler 1',
+          votes: 3,
+          notes: 'Great morning introduction to the city.',
+          transitToNext: '10 min walk'
+        },
+        {
+          id: `act-${d}-2`,
+          time: '12:30 PM',
+          title: `Local Food Hall & Artisanal Market Tasting`,
+          description: 'Savor regional specialties, handmade pastries, and seasonal produce from neighborhood market stalls.',
+          category: 'food' as const,
+          cost: 18,
+          duration: '1.5 hrs',
+          neighborhood: 'Market Quarter',
+          vibe: 'Authentic Gastronomy',
+          suggestedBy: travelerNames[1] || 'Traveler 2',
+          votes: 4,
+          notes: 'Accommodates both meat and vegetarian dietary preferences.',
+          transitToNext: '15 min via metro or walk'
+        },
+        {
+          id: `act-${d}-3`,
+          time: '03:00 PM',
+          title: `${destination} Botanical Promenade & Skyline Viewpoint`,
+          description: 'Relaxed afternoon stroll through shaded gardens leading to an open-air panoramic viewpoint.',
+          category: 'nature' as const,
+          cost: 8,
+          duration: '2 hrs',
+          neighborhood: 'Hillside District',
+          vibe: 'Scenic Panorama',
+          suggestedBy: travelerNames[2] || 'Traveler 3',
+          votes: 3,
+          notes: 'Optimal golden hour lighting for photography.',
+          transitToNext: '15 min scenic stroll'
+        },
+        {
+          id: `act-${d}-4`,
+          time: '07:00 PM',
+          title: `Lantern-Lit Bistro Dinner & Evening Social`,
+          description: 'Communal dinner featuring seasonal plates, local refreshments, and acoustic ambiance.',
+          category: 'food' as const,
+          cost: 28,
+          duration: '2.5 hrs',
+          neighborhood: 'Riverside Quarter',
+          vibe: 'Social Celebration',
+          suggestedBy: travelerNames[0] || 'Traveler 1',
+          votes: 4,
+          notes: 'Group table reserved for evening wind-down.',
+          transitToNext: 'Return to hotel'
+        }
+      ]
+    });
+  }
+
+  return {
+    id: `trip-${Date.now()}`,
+    title: `${destination} ${durationDays}-Day ${groupMode ? 'Friend Odyssey' : 'Solo Explorer'}`,
+    destination,
+    groupMode,
+    startDate: '2026-11-20',
+    endDate: '2026-11-23',
+    durationDays,
+    targetBudget,
+    travelStyle,
+    travelers,
+    groupSummary: {
+      consensusScore: '94% Consensus Match',
+      reconciliationNotes: 'Balanced high-energy mornings with relaxed mid-afternoon cafe respites. Group food preferences were prioritized with options for every budget tier.',
+      sharedInterests: ['Local Gastronomy', 'Scenic Viewpoints', 'Historic Neighborhoods'],
+      compromisePace: 'Moderate (Balanced 4-stop rhythm)'
+    },
+    days,
+    createdAt: new Date().toISOString(),
+    isLiveAI: false
+  };
+}

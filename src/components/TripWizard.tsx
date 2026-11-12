@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Compass, Users, User, Calendar, DollarSign, Sparkles, Plus, Trash2, ArrowRight, ArrowLeft, Check, Heart, Coffee, Moon, Sun, AlertTriangle, MapPin } from 'lucide-react';
 import { TravelerProfile, TripPlan, BudgetTier, TravelPace } from '../types/travel';
+import { createFallbackTripPlan } from '../data/sampleTrips';
 
 interface TripWizardProps {
   onComplete: (trip: TripPlan) => void;
@@ -196,39 +197,52 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
         })
       });
 
-      const result = await response.json();
-      if (result.success && result.data) {
-        const trip: TripPlan = {
-          id: `trip-${Date.now()}`,
-          title: `${destination} ${durationDays}-Day ${groupMode ? 'Friend Odyssey' : 'Solo Journey'}`,
-          destination,
-          groupMode,
-          startDate: '2026-11-20',
-          endDate: '2026-11-23',
-          durationDays,
-          targetBudget,
-          travelStyle,
-          travelers,
-          groupSummary: result.data.groupSummary || {
-            consensusScore: '92% Match',
-            reconciliationNotes: 'Balanced mornings, grouped shared food stops, and scenic afternoons.',
-            sharedInterests: ['Food & Culture', 'Scenic Views'],
-            compromisePace: 'Moderate'
-          },
-          days: result.data.days,
-          createdAt: new Date().toISOString(),
-          isLiveAI: result.isLiveAI
-        };
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success && result.data) {
+          const trip: TripPlan = {
+            id: `trip-${Date.now()}`,
+            title: `${destination} ${durationDays}-Day ${groupMode ? 'Friend Odyssey' : 'Solo Journey'}`,
+            destination,
+            groupMode,
+            startDate: '2026-11-20',
+            endDate: '2026-11-23',
+            durationDays,
+            targetBudget,
+            travelStyle,
+            travelers,
+            groupSummary: result.data.groupSummary || {
+              consensusScore: '92% Match',
+              reconciliationNotes: 'Balanced mornings, grouped shared food stops, and scenic afternoons.',
+              sharedInterests: ['Food & Culture', 'Scenic Views'],
+              compromisePace: 'Moderate'
+            },
+            days: result.data.days,
+            createdAt: new Date().toISOString(),
+            isLiveAI: result.isLiveAI
+          };
 
-        setIsGenerating(false);
-        onComplete(trip);
-        return;
+          setIsGenerating(false);
+          onComplete(trip);
+          return;
+        }
       }
     } catch (err) {
-      console.error('Error in itinerary generation:', err);
+      console.warn('Backend itinerary generation endpoint unreachable, activating client generator:', err);
     }
 
+    // Seamless client-side fallback generation if backend is unavailable
+    const fallbackTrip = createFallbackTripPlan(
+      destination,
+      durationDays,
+      travelers,
+      groupMode,
+      targetBudget,
+      travelStyle
+    );
+
     setIsGenerating(false);
+    onComplete(fallbackTrip);
   };
 
   return (
