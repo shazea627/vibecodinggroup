@@ -1,9 +1,8 @@
 import React from 'react';
-import { Compass, Sparkles, Users, FileText, Plus, Globe } from 'lucide-react';
+import { Compass, Sparkles, Users, Plus, Globe } from 'lucide-react';
 
 interface NavbarProps {
   onNewTrip: () => void;
-  onOpenBMC: () => void;
   onSelectSample: (tripKey: string) => void;
   activeView: 'landing' | 'wizard' | 'itinerary';
   onGoHome: () => void;
@@ -14,7 +13,6 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({
   onNewTrip,
-  onOpenBMC,
   onSelectSample,
   activeView,
   onGoHome,
@@ -68,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="relative group">
             <button className="flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 hover:text-slate-900">
               <Globe className="w-4 h-4 text-slate-400" />
-              <span>Demo Trips</span>
+              <span>Explore Trips</span>
             </button>
             <div className="absolute top-full left-0 mt-2 w-56 p-1.5 bg-white rounded-xl shadow-xl border border-slate-200 hidden group-hover:block z-50">
               <button
@@ -89,11 +87,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <button
-            onClick={onOpenBMC}
-            className="flex items-center gap-1.5 text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors whitespace-nowrap shrink-0"
+            onClick={onNewTrip}
+            className="transition-colors whitespace-nowrap shrink-0 hover:text-slate-900"
           >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Miro Canvas Analysis</span>
+            Group Planner
           </button>
         </nav>
 
