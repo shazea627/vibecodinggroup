@@ -4,6 +4,7 @@ import {
   Activity, 
   DayPlan 
 } from '../types/travel';
+import { BudgetBreakdownChart } from './BudgetBreakdownChart';
 import { 
   MapPin, 
   Clock, 
@@ -668,7 +669,11 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
 
       {/* TAB 3: Shared Expenses & Split Cost Calculator */}
       {activeTab === 'expenses' && (
-        <div className="space-y-6">
+        <div className="space-y-6"> 
+          <BudgetBreakdownChart
+  trip={trip}
+  onUpdateTrip={onUpdateTrip}
+/>         
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs">
             <div>
               <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">
