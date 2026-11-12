@@ -11,43 +11,43 @@ const POPULAR_DESTINATIONS = [
   { 
     name: 'Tokyo, Japan', 
     days: 3, 
-    image: '/src/assets/images/hero_tokyo_twilight_1794467674929.jpg',
+    image: '/assets/images/hero_tokyo_twilight_1794467674929.jpg',
     tag: 'Culture, Neon & Food'
   },
   { 
     name: 'Seoul, South Korea', 
     days: 3, 
-    image: '/src/assets/images/dest_seoul_hanok_1794470606780.jpg',
+    image: '/assets/images/dest_seoul_hanok_1794470606780.jpg',
     tag: 'Hanok Alleys & K-BBQ'
   },
   { 
     name: 'Bangkok, Thailand', 
     days: 3, 
-    image: '/src/assets/images/dest_bangkok_temple_1794470620264.jpg',
+    image: '/assets/images/dest_bangkok_temple_1794470620264.jpg',
     tag: 'Golden Temples & River'
   },
   { 
     name: 'Shanghai, China', 
     days: 3, 
-    image: '/src/assets/images/dest_shanghai_bund_1794470633976.jpg',
+    image: '/assets/images/dest_shanghai_bund_1794470633976.jpg',
     tag: 'The Bund & French Concession'
   },
   { 
     name: 'Ubud & Canggu, Bali', 
     days: 3, 
-    image: '/src/assets/images/dest_bali_ubud_1794467676019.jpg',
+    image: '/assets/images/dest_bali_ubud_1794467676019.jpg',
     tag: 'Rice Terraces & Surf'
   },
   { 
     name: 'Paris & Marais, France', 
     days: 3, 
-    image: '/src/assets/images/dest_paris_terrace_1794467676789.jpg',
+    image: '/assets/images/dest_paris_terrace_1794467676789.jpg',
     tag: 'Cafes, Art & Bistros'
   },
   { 
     name: 'Barcelona, Spain', 
     days: 4, 
-    image: '/src/assets/images/dest_barcelona_quarter_1794467680665.jpg',
+    image: '/assets/images/dest_barcelona_quarter_1794467680665.jpg',
     tag: 'Gothic Quarter & Tapas'
   }
 ];

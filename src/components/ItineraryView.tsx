@@ -70,19 +70,19 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
 
   // Header background image matching
   const destLower = trip.destination.toLowerCase();
-  let headerImage = '/src/assets/images/dest_barcelona_quarter_1794467680665.jpg';
+  let headerImage = '/assets/images/dest_barcelona_quarter_1794467680665.jpg';
   if (destLower.includes('tokyo') || destLower.includes('japan')) {
-    headerImage = '/src/assets/images/hero_tokyo_twilight_1794467674929.jpg';
+    headerImage = '/assets/images/hero_tokyo_twilight_1794467674929.jpg';
   } else if (destLower.includes('seoul') || destLower.includes('korea')) {
-    headerImage = '/src/assets/images/dest_seoul_hanok_1794470606780.jpg';
+    headerImage = '/assets/images/dest_seoul_hanok_1794470606780.jpg';
   } else if (destLower.includes('bangkok') || destLower.includes('thailand')) {
-    headerImage = '/src/assets/images/dest_bangkok_temple_1794470620264.jpg';
+    headerImage = '/assets/images/dest_bangkok_temple_1794470620264.jpg';
   } else if (destLower.includes('shanghai') || destLower.includes('china')) {
-    headerImage = '/src/assets/images/dest_shanghai_bund_1794470633976.jpg';
+    headerImage = '/assets/images/dest_shanghai_bund_1794470633976.jpg';
   } else if (destLower.includes('bali') || destLower.includes('indonesia')) {
-    headerImage = '/src/assets/images/dest_bali_ubud_1794467676019.jpg';
+    headerImage = '/assets/images/dest_bali_ubud_1794467676019.jpg';
   } else if (destLower.includes('paris') || destLower.includes('france')) {
-    headerImage = '/src/assets/images/dest_paris_terrace_1794467676789.jpg';
+    headerImage = '/assets/images/dest_paris_terrace_1794467676789.jpg';
   }
 
   // Voting interaction

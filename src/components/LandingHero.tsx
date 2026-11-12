@@ -15,7 +15,7 @@ const DESTINATION_CARDS = [
   {
     key: 'tokyo',
     name: 'Tokyo, Japan',
-    image: '/src/assets/images/hero_tokyo_twilight_1794467674929.jpg',
+    image: '/assets/images/hero_tokyo_twilight_1794467674929.jpg',
     tag: 'Group Favorite · 3 Days',
     title: 'Neon, Shinto Shrines & Hidden Izakayas',
     vibe: '94% Consensus Match',
@@ -24,7 +24,7 @@ const DESTINATION_CARDS = [
   {
     key: 'seoul',
     name: 'Seoul, South Korea',
-    image: '/src/assets/images/dest_seoul_hanok_1794470606780.jpg',
+    image: '/assets/images/dest_seoul_hanok_1794470606780.jpg',
     tag: 'Group Trend · 3 Days',
     title: 'Hanok Alleys, K-BBQ & Seongsu Design',
     vibe: '95% Consensus Match',
@@ -33,7 +33,7 @@ const DESTINATION_CARDS = [
   {
     key: 'bangkok',
     name: 'Bangkok, Thailand',
-    image: '/src/assets/images/dest_bangkok_temple_1794470620264.jpg',
+    image: '/assets/images/dest_bangkok_temple_1794470620264.jpg',
     tag: 'Riverside & Food · 3 Days',
     title: 'Gilded Spired Temples, Canals & Chinatown',
     vibe: '96% Consensus Match',
@@ -42,7 +42,7 @@ const DESTINATION_CARDS = [
   {
     key: 'shanghai',
     name: 'Shanghai, China',
-    image: '/src/assets/images/dest_shanghai_bund_1794470633976.jpg',
+    image: '/assets/images/dest_shanghai_bund_1794470633976.jpg',
     tag: 'Art & Heritage · 3 Days',
     title: 'The Bund Waterfront & Sycamore Tree Avenues',
     vibe: '93% Consensus Match',
@@ -51,7 +51,7 @@ const DESTINATION_CARDS = [
   {
     key: 'bali',
     name: 'Ubud & Canggu, Bali',
-    image: '/src/assets/images/dest_bali_ubud_1794467676019.jpg',
+    image: '/assets/images/dest_bali_ubud_1794467676019.jpg',
     tag: 'Solo Retreat · 3 Days',
     title: 'Emerald Rice Terraces & Sound Healing',
     vibe: '100% Personal Flow',
@@ -60,7 +60,7 @@ const DESTINATION_CARDS = [
   {
     key: 'paris',
     name: 'Paris & Marais, France',
-    image: '/src/assets/images/dest_paris_terrace_1794467676789.jpg',
+    image: '/assets/images/dest_paris_terrace_1794467676789.jpg',
     tag: 'Couples & Foodies · 3 Days',
     title: 'Artisanal Roasteries, Galleries & Bistros',
     vibe: '92% Shared Vibe',
@@ -69,7 +69,7 @@ const DESTINATION_CARDS = [
   {
     key: 'barcelona',
     name: 'Barcelona, Spain',
-    image: '/src/assets/images/dest_barcelona_quarter_1794467680665.jpg',
+    image: '/assets/images/dest_barcelona_quarter_1794467680665.jpg',
     tag: 'Friends & Culture · 4 Days',
     title: 'Gothic Quarter Tapas & Modernist Architecture',
     vibe: '96% Consensus Match',
@@ -158,7 +158,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           <div className="lg:col-span-5 relative">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 group">
               <img
-                src="/src/assets/images/hero_tokyo_twilight_1794467674929.jpg"
+                src="/assets/images/hero_tokyo_twilight_1794467674929.jpg"
                 alt="Tokyo Twilight Skyline with Izakaya"
                 referrerPolicy="no-referrer"
                 className="w-full h-[420px] sm:h-[480px] object-cover transition-transform duration-700 group-hover:scale-105"
@@ -333,7 +333,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             <div className="lg:col-span-6 relative">
               <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
                 <img
-                  src="/src/assets/images/travelers_friends_planning_1794467677172.jpg"
+                  src="/assets/images/travelers_friends_planning_1794467677172.jpg"
                   alt="Friends planning travel together"
                   referrerPolicy="no-referrer"
                   className="w-full h-80 sm:h-96 object-cover"

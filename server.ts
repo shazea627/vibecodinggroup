@@ -15,6 +15,7 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json({ limit: '10mb' }));
+app.use(express.static(path.resolve(__dirname, 'public')));
 
 // Server-side Gemini initialization using official @google/genai guidelines
 let ai: GoogleGenAI | null = null;
