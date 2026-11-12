@@ -46,6 +46,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
 }) => {
   const [selectedDayNumber, setSelectedDayNumber] = useState(1);
   const [activeTab, setActiveTab] = useState<'timeline' | 'consensus' | 'expenses'>('timeline');
+  const [showBudgetVisualizerInTimeline, setShowBudgetVisualizerInTimeline] = useState(false);
   
   // Modals
   const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
@@ -363,6 +364,26 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
       {/* TAB 1: Daily Timeline View */}
       {activeTab === 'timeline' && (
         <div className="space-y-6">
+          
+          {/* Budget Chart Toggle */}
+<div>
+  <button
+    type="button"
+    onClick={() => setShowBudgetVisualizerInTimeline(prev => !prev)}
+    className="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold"
+  >
+    {showBudgetVisualizerInTimeline ? 'Hide Budget Chart' : 'Show Budget Chart'}
+  </button>
+</div>
+
+{showBudgetVisualizerInTimeline && (
+  <div className="animate-in fade-in">
+    <BudgetBreakdownChart
+      trip={trip}
+      onUpdateTrip={onUpdateTrip}
+    />
+  </div>
+)}
           {/* Day Selector Pills Bar */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
             {trip.days.map(d => {
