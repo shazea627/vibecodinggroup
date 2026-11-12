@@ -5,7 +5,10 @@ export type ActivityCategory =
   | 'art'
   | 'nightlife'
   | 'shopping'
-  | 'sightseeing';
+  | 'sightseeing'
+  | 'transport'
+  | 'lodging';
+
 export type TravelPace = 'relaxed' | 'balanced' | 'fast_paced';
 export type BudgetTier = 'budget' | 'moderate' | 'luxury';
 
