@@ -30,19 +30,24 @@ import {
   ChevronRight,
   Sun,
   X,
-  Compass
+  Compass,
+  Ticket
 } from 'lucide-react';
 
 interface ItineraryViewProps {
   trip: TripPlan;
   onUpdateTrip: (updated: TripPlan) => void;
   onNewTrip: () => void;
+  onBookActivity?: (activity: Activity) => void;
+  onViewAllBookings?: () => void;
 }
 
 export const ItineraryView: React.FC<ItineraryViewProps> = ({
   trip,
   onUpdateTrip,
-  onNewTrip
+  onNewTrip,
+  onBookActivity,
+  onViewAllBookings
 }) => {
   const [selectedDayNumber, setSelectedDayNumber] = useState(1);
   const [activeTab, setActiveTab] = useState<'timeline' | 'consensus' | 'expenses'>('timeline');
@@ -55,6 +60,17 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
   const [isAdapting, setIsAdapting] = useState(false);
   const [adaptNotice, setAdaptNotice] = useState<string | null>(null);
 
+  // Date changing state
+  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+  const [tempStartDate, setTempStartDate] = useState(trip.startDate || '2026-11-20');
+  const [tempDuration, setTempDuration] = useState(trip.durationDays || 3);
+
+  // Day detail edit state
+  const [isDayEditModalOpen, setIsDayEditModalOpen] = useState(false);
+  const [tempDayDate, setTempDayDate] = useState('');
+  const [tempDayTitle, setTempDayTitle] = useState('');
+  const [tempDayArea, setTempDayArea] = useState('');
+
   // New activity form state
   const [newTitle, setNewTitle] = useState('');
   const [newDesc, setNewDesc] = useState('');
@@ -65,15 +81,168 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
 
   const currentDay = trip.days.find(d => d.dayNumber === selectedDayNumber) || trip.days[0];
 
+  // Robust timezone-safe date parsing & formatting helpers
+  const parseLocalDate = (dateStr?: string): Date => {
+    if (!dateStr) return new Date();
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+      return new Date(y, m, d);
+    }
+    return new Date(dateStr);
+  };
+
+  const formatLocalDate = (dateObj: Date): string => {
+    const y = dateObj.getFullYear();
+    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const d = String(dateObj.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  };
+
+  const formatTripRange = (startDateStr?: string, endDateStr?: string): string => {
+    if (!startDateStr) return 'Flexible Dates';
+    try {
+      const s = parseLocalDate(startDateStr);
+      const sStr = s.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      if (endDateStr) {
+        const e = parseLocalDate(endDateStr);
+        const eStr = e.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        return `${sStr} – ${eStr}`;
+      }
+      return `${sStr}, ${s.getFullYear()}`;
+    } catch {
+      return startDateStr;
+    }
+  };
+
+  const calculateDayLabel = (startDateStr: string, dayIndex: number): string => {
+    try {
+      const d = parseLocalDate(startDateStr);
+      d.setDate(d.getDate() + dayIndex);
+      return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    } catch {
+      return `Day ${dayIndex + 1}`;
+    }
+  };
+
+  // Handler: Change whole trip departure date and recalculate all day schedules
+  const handleSaveTripDates = () => {
+    const newStartDate = tempStartDate;
+    const newDuration = Math.max(1, Math.min(14, Number(tempDuration) || trip.durationDays));
+    
+    const startObj = parseLocalDate(newStartDate);
+    const endObj = new Date(startObj);
+    endObj.setDate(startObj.getDate() + (newDuration - 1));
+    const newEndDate = formatLocalDate(endObj);
+
+    const updatedDays = [];
+    for (let i = 0; i < newDuration; i++) {
+      const dayNum = i + 1;
+      const dayDateLabel = calculateDayLabel(newStartDate, i);
+      const existing = trip.days[i];
+
+      if (existing) {
+        updatedDays.push({
+          ...existing,
+          dayNumber: dayNum,
+          date: `Day ${dayNum} (${dayDateLabel})`
+        });
+      } else {
+        // Automatically scaffold new day if duration was expanded
+        updatedDays.push({
+          dayNumber: dayNum,
+          date: `Day ${dayNum} (${dayDateLabel})`,
+          title: `Day ${dayNum}: Neighborhood Exploration & Local Flavors`,
+          areaSummary: 'Downtown District',
+          weather: { condition: 'Sunny & Pleasant', temp: '21°C', icon: 'sun' },
+          estimatedWalkingKm: 5.4,
+          estimatedBudgetPerPerson: 40,
+          activities: [
+            {
+              id: `act-${dayNum}-new-1`,
+              time: '10:00 AM',
+              title: `${trip.destination.split(',')[0]} Scenic Heritage Walk`,
+              description: 'Explore scenic landmarks, public parks, and neighborhood architecture.',
+              category: 'sightseeing' as const,
+              cost: 10,
+              duration: '2 hrs',
+              neighborhood: 'Historic District',
+              vibe: 'Scenic & Relaxed',
+              suggestedBy: trip.travelers[0]?.name || 'Traveler',
+              votes: 3,
+              notes: 'Added via trip date extension.',
+              transitToNext: '10 min walk'
+            },
+            {
+              id: `act-${dayNum}-new-2`,
+              time: '01:00 PM',
+              title: 'Artisanal Lunch & Cafe Respite',
+              description: 'Sample local culinary specialties in the market quarter.',
+              category: 'food' as const,
+              cost: 18,
+              duration: '1.5 hrs',
+              neighborhood: 'Market Quarter',
+              vibe: 'Local Food',
+              suggestedBy: trip.travelers[1]?.name || trip.travelers[0]?.name || 'Traveler',
+              votes: 4,
+              notes: 'Great spot for relaxed conversation.',
+              transitToNext: '15 min transit'
+            }
+          ]
+        });
+      }
+    }
+
+    const updatedTrip: TripPlan = {
+      ...trip,
+      startDate: newStartDate,
+      endDate: newEndDate,
+      durationDays: newDuration,
+      days: updatedDays
+    };
+
+    onUpdateTrip(updatedTrip);
+    setIsDateModalOpen(false);
+  };
+
+  // Handler: Save customized day details
+  const handleSaveDayDetails = () => {
+    const updatedDays = trip.days.map(d => {
+      if (d.dayNumber === selectedDayNumber) {
+        return {
+          ...d,
+          date: tempDayDate || d.date,
+          title: tempDayTitle || d.title,
+          areaSummary: tempDayArea || d.areaSummary
+        };
+      }
+      return d;
+    });
+
+    onUpdateTrip({
+      ...trip,
+      days: updatedDays
+    });
+    setIsDayEditModalOpen(false);
+  };
+
   // Header background image matching
   const destLower = trip.destination.toLowerCase();
-  let headerImage = '/src/assets/images/dest_barcelona_quarter_1794467680665.jpg';
+  let headerImage = '/assets/images/dest_barcelona_quarter_1794467680665.jpg';
   if (destLower.includes('tokyo') || destLower.includes('japan')) {
-    headerImage = '/src/assets/images/hero_tokyo_twilight_1794467674929.jpg';
+    headerImage = '/assets/images/hero_tokyo_twilight_1794467674929.jpg';
+  } else if (destLower.includes('seoul') || destLower.includes('korea')) {
+    headerImage = '/assets/images/dest_seoul_hanok_1794470606780.jpg';
+  } else if (destLower.includes('bangkok') || destLower.includes('thailand')) {
+    headerImage = '/assets/images/dest_bangkok_temple_1794470620264.jpg';
+  } else if (destLower.includes('shanghai') || destLower.includes('china')) {
+    headerImage = '/assets/images/dest_shanghai_bund_1794470633976.jpg';
   } else if (destLower.includes('bali') || destLower.includes('indonesia')) {
-    headerImage = '/src/assets/images/dest_bali_ubud_1794467676019.jpg';
+    headerImage = '/assets/images/dest_bali_ubud_1794467676019.jpg';
   } else if (destLower.includes('paris') || destLower.includes('france')) {
-    headerImage = '/src/assets/images/dest_paris_terrace_1794467676789.jpg';
+    headerImage = '/assets/images/dest_paris_terrace_1794467676789.jpg';
   }
 
   // Voting interaction
@@ -259,18 +428,29 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
               <span className="text-xs font-bold text-amber-300 bg-amber-950/60 backdrop-blur-md px-3 py-1 rounded-full border border-amber-400/30">
                 {trip.destination}
               </span>
+              <button
+                onClick={() => {
+                  setTempStartDate(trip.startDate || '2026-11-20');
+                  setTempDuration(trip.durationDays || 3);
+                  setIsDateModalOpen(true);
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-slate-900/70 hover:bg-slate-900/90 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 transition-all cursor-pointer group shadow-xs"
+                title="Click to change trip dates"
+              >
+                <Calendar className="w-3.5 h-3.5 text-amber-300 transition-transform group-hover:scale-110" />
+                <span>{formatTripRange(trip.startDate, trip.endDate)}</span>
+                <span className="text-[10px] text-amber-300 font-bold ml-1 uppercase underline decoration-amber-400/50">Change</span>
+              </button>
               <span className="text-xs font-semibold text-slate-200">
                 {trip.durationDays} Days · {trip.groupMode ? `${trip.travelers.length} Friends` : 'Solo Traveler'}
               </span>
               <span className="text-xs font-bold text-emerald-300 bg-emerald-950/60 backdrop-blur-md px-3 py-1 rounded-full border border-emerald-400/30">
                 {trip.groupSummary?.consensusScore || '94% Consensus Match'}
               </span>
-              {trip.isLiveAI && (
-                <span className="text-[11px] font-semibold text-indigo-200 bg-indigo-950/60 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-indigo-400/30 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-amber-400" />
-                  Live Gemini 3.8
-                </span>
-              )}
+              <span className="text-[11px] font-semibold text-indigo-200 bg-indigo-950/60 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-indigo-400/30 flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                Smart Route Sync
+              </span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-white drop-shadow-sm">
@@ -285,12 +465,40 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
           {/* Action Group */}
           <div className="flex items-center gap-3 shrink-0">
             <button
+              onClick={() => {
+                setTempStartDate(trip.startDate || '2026-11-20');
+                setTempDuration(trip.durationDays || 3);
+                setIsDateModalOpen(true);
+              }}
+              className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md font-semibold text-xs sm:text-sm rounded-xl border border-white/20 transition-colors flex items-center gap-2"
+              title="Change trip departure date or duration"
+            >
+              <Calendar className="w-4 h-4 text-amber-300" />
+              <span>Change Dates</span>
+            </button>
+
+            <button
               onClick={() => setIsShareModalOpen(true)}
               className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md font-semibold text-xs sm:text-sm rounded-xl border border-white/20 transition-colors flex items-center gap-2"
             >
               <Share2 className="w-4 h-4 text-slate-200" />
               <span>Share & Export</span>
             </button>
+
+            {onViewAllBookings && (
+              <button
+                onClick={onViewAllBookings}
+                className="px-4 py-2.5 bg-indigo-600/90 hover:bg-indigo-600 text-white backdrop-blur-md font-semibold text-xs sm:text-sm rounded-xl transition-colors shadow-md flex items-center gap-2"
+              >
+                <Ticket className="w-4 h-4 text-white" />
+                <span>Book Activities</span>
+                {trip.bookings && trip.bookings.length > 0 && (
+                  <span className="w-5 h-5 rounded-full bg-white text-indigo-700 text-[10px] font-bold flex items-center justify-center">
+                    {trip.bookings.length}
+                  </span>
+                )}
+              </button>
+            )}
 
             <button
               onClick={onNewTrip}
@@ -385,9 +593,11 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
   </div>
 )}
           {/* Day Selector Pills Bar */}
+          {/* Day Selector Pills Bar with Calendar Dates */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
-            {trip.days.map(d => {
+            {trip.days.map((d, idx) => {
               const isSelected = d.dayNumber === selectedDayNumber;
+              const formattedDayDate = calculateDayLabel(trip.startDate, idx);
               return (
                 <button
                   key={d.dayNumber}
@@ -400,7 +610,9 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                 >
                   <div className="flex items-center justify-between text-xs mb-0.5">
                     <span className="font-bold text-slate-900">Day {d.dayNumber}</span>
-                    <span className="text-[11px] text-slate-400 font-medium">{d.weather?.temp}</span>
+                    <span className="text-[11px] text-indigo-700 font-semibold bg-indigo-50 px-1.5 py-0.2 rounded">
+                      {formattedDayDate}
+                    </span>
                   </div>
                   <div className="text-[11px] text-slate-500 truncate max-w-[140px]">
                     {d.areaSummary}
@@ -414,9 +626,23 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
           <div className="bg-white rounded-3xl border border-slate-200 p-5 sm:p-7 space-y-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
               <div>
-                <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">
-                  {currentDay.date} · {currentDay.areaSummary}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">
+                    {currentDay.date} · {currentDay.areaSummary}
+                  </span>
+                  <button
+                    onClick={() => {
+                      setTempDayDate(currentDay.date);
+                      setTempDayTitle(currentDay.title);
+                      setTempDayArea(currentDay.areaSummary);
+                      setIsDayEditModalOpen(true);
+                    }}
+                    className="p-1 text-slate-400 hover:text-indigo-600 hover:bg-slate-100 rounded-md transition-colors"
+                    title="Customize Day Date & Title"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
                 <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 mt-0.5">
                   {currentDay.title}
                 </h2>
@@ -540,15 +766,31 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                         </div>
                       )}
 
-                      {/* Travel Attribution Tag */}
-                      <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px]">
-                        <span className="text-slate-500 font-medium">
-                          Inspired by: <span className="text-slate-900 font-semibold">{act.suggestedBy}</span>
-                        </span>
-                        <span className="text-slate-300">·</span>
-                        <span className="text-slate-500">
-                          Cost: <span className="font-semibold text-slate-900">{act.cost === 0 ? 'Free' : `$${act.cost} / person`}</span>
-                        </span>
+                      {/* Travel Attribution Tag & Booking CTA */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-[11px]">
+                        <div className="flex items-center gap-3">
+                          <span className="text-slate-500 font-medium">
+                            Inspired by: <span className="text-slate-900 font-semibold">{act.suggestedBy}</span>
+                          </span>
+                          <span className="text-slate-300">·</span>
+                          <span className="text-slate-500">
+                            Cost: <span className="font-semibold text-slate-900">{act.cost === 0 ? 'Free' : `$${act.cost} / person`}</span>
+                          </span>
+                        </div>
+
+                        {onBookActivity && act.cost > 0 && (
+                          <button
+                            onClick={() => onBookActivity(act)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-semibold border border-indigo-200 transition-colors shadow-2xs"
+                          >
+                            <Ticket className="w-3.5 h-3.5" />
+                            <span>
+                              {trip.bookings?.some(b => b.activityId === act.id || b.activityTitle.includes(act.title))
+                                ? 'Pass Booked'
+                                : 'Book Passes'}
+                            </span>
+                          </button>
+                        )}
                       </div>
                     </div>
 
@@ -1010,6 +1252,263 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                 className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: CHANGE TRIP DATES & DURATION */}
+      {isDateModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-lg w-full border border-slate-200 shadow-2xl p-6 sm:p-8 space-y-6 my-8">
+            <div className="flex items-start justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                    <Calendar className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">
+                    Schedule Controller
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold font-display text-slate-900">
+                  Change Itinerary Dates
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Select a new departure date. Your existing activities and daily timelines will seamlessly shift to align with your new travel calendar.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsDateModalOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-800 rounded-lg hover:bg-slate-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Form Inputs */}
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+                  <span>Trip Departure Date</span>
+                  <span className="text-[11px] text-indigo-600 font-semibold">
+                    {parseLocalDate(tempStartDate).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+                  </span>
+                </label>
+                <input
+                  type="date"
+                  value={tempStartDate}
+                  onChange={e => setTempStartDate(e.target.value)}
+                  className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:bg-white text-slate-900 font-medium"
+                />
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const d = parseLocalDate(tempStartDate);
+                      d.setDate(d.getDate() - 7);
+                      setTempStartDate(formatLocalDate(d));
+                    }}
+                    className="px-2.5 py-1 text-[11px] font-medium bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition-colors"
+                  >
+                    -1 Week
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const d = parseLocalDate(tempStartDate);
+                      d.setDate(d.getDate() + 7);
+                      setTempStartDate(formatLocalDate(d));
+                    }}
+                    className="px-2.5 py-1 text-[11px] font-medium bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition-colors"
+                  >
+                    +1 Week
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const d = parseLocalDate(tempStartDate);
+                      d.setMonth(d.getMonth() + 1);
+                      setTempStartDate(formatLocalDate(d));
+                    }}
+                    className="px-2.5 py-1 text-[11px] font-medium bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition-colors"
+                  >
+                    +1 Month
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const now = new Date();
+                      setTempStartDate(formatLocalDate(now));
+                    }}
+                    className="px-2.5 py-1 text-[11px] font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-colors ml-auto"
+                  >
+                    Today
+                  </button>
+                </div>
+              </div>
+
+              {/* Duration selector */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+                  <span>Trip Length (Days)</span>
+                  <span className="text-[11px] text-slate-500 font-normal">
+                    Ends on {(() => {
+                      const end = parseLocalDate(tempStartDate);
+                      end.setDate(end.getDate() + (tempDuration - 1));
+                      return end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    })()}
+                  </span>
+                </label>
+                <div className="flex items-center gap-2">
+                  {[2, 3, 4, 5, 7].map(num => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setTempDuration(num)}
+                      className={`flex-1 py-2 text-xs font-bold rounded-xl border transition-all ${
+                        tempDuration === num
+                          ? 'border-indigo-600 bg-indigo-50 text-indigo-700 ring-1 ring-indigo-600'
+                          : 'border-slate-200 text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      {num} Days
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Day-by-Day Recalculation Preview */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
+                <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+                  New Calendar Schedule Preview
+                </span>
+                <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                  {Array.from({ length: tempDuration }).map((_, i) => {
+                    const dayNum = i + 1;
+                    const dateFormatted = calculateDayLabel(tempStartDate, i);
+                    const existingTitle = trip.days[i]?.title || `Day ${dayNum}: City Exploration`;
+
+                    return (
+                      <div
+                        key={i}
+                        className="p-2 bg-white rounded-xl border border-slate-200/70 text-xs flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-slate-900">Day {dayNum}</span>
+                          <span className="text-indigo-600 font-semibold">({dateFormatted})</span>
+                        </div>
+                        <span className="text-[11px] text-slate-500 truncate max-w-[180px]">
+                          {existingTitle.replace(/^Day \d+:\s*/, '')}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="pt-2 flex items-center justify-between border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsDateModalOpen(false)}
+                className="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveTripDates}
+                className="px-5 py-2.5 bg-slate-900 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center gap-1.5"
+              >
+                <Check className="w-4 h-4" />
+                <span>Save & Apply New Dates</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: EDIT SPECIFIC DAY DETAILS */}
+      {isDayEditModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full border border-slate-200 shadow-2xl p-6 sm:p-8 space-y-5">
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">
+                  Day {selectedDayNumber} Customization
+                </span>
+                <h3 className="text-xl font-bold font-display text-slate-900 mt-0.5">
+                  Edit Day Date & Theme
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsDayEditModalOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-800 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Date Label
+                </label>
+                <input
+                  type="text"
+                  value={tempDayDate}
+                  onChange={e => setTempDayDate(e.target.value)}
+                  placeholder="e.g. Day 1 (Fri, Nov 20) or Saturday, Dec 12"
+                  className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Day Theme / Title
+                </label>
+                <input
+                  type="text"
+                  value={tempDayTitle}
+                  onChange={e => setTempDayTitle(e.target.value)}
+                  placeholder="e.g. Historic Asakusa & Modern Akihabara"
+                  className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Neighborhood / Area Summary
+                </label>
+                <input
+                  type="text"
+                  value={tempDayArea}
+                  onChange={e => setTempDayArea(e.target.value)}
+                  placeholder="e.g. Taito & Chiyoda"
+                  className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                />
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center justify-between border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsDayEditModalOpen(false)}
+                className="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveDayDetails}
+                className="px-5 py-2.5 bg-slate-900 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center gap-1.5"
+              >
+                <Check className="w-4 h-4" />
+                <span>Save Day Details</span>
               </button>
             </div>
           </div>

@@ -11,25 +11,43 @@ const POPULAR_DESTINATIONS = [
   { 
     name: 'Tokyo, Japan', 
     days: 3, 
-    image: '/src/assets/images/hero_tokyo_twilight_1794467674929.jpg',
+    image: '/assets/images/hero_tokyo_twilight_1794467674929.jpg',
     tag: 'Culture, Neon & Food'
+  },
+  { 
+    name: 'Seoul, South Korea', 
+    days: 3, 
+    image: '/assets/images/dest_seoul_hanok_1794470606780.jpg',
+    tag: 'Hanok Alleys & K-BBQ'
+  },
+  { 
+    name: 'Bangkok, Thailand', 
+    days: 3, 
+    image: '/assets/images/dest_bangkok_temple_1794470620264.jpg',
+    tag: 'Golden Temples & River'
+  },
+  { 
+    name: 'Shanghai, China', 
+    days: 3, 
+    image: '/assets/images/dest_shanghai_bund_1794470633976.jpg',
+    tag: 'The Bund & French Concession'
   },
   { 
     name: 'Ubud & Canggu, Bali', 
     days: 3, 
-    image: '/src/assets/images/dest_bali_ubud_1794467676019.jpg',
+    image: '/assets/images/dest_bali_ubud_1794467676019.jpg',
     tag: 'Rice Terraces & Surf'
   },
   { 
     name: 'Paris & Marais, France', 
     days: 3, 
-    image: '/src/assets/images/dest_paris_terrace_1794467676789.jpg',
-    tag: 'Cafes, Art & Architecture'
+    image: '/assets/images/dest_paris_terrace_1794467676789.jpg',
+    tag: 'Cafes, Art & Bistros'
   },
   { 
     name: 'Barcelona, Spain', 
     days: 4, 
-    image: '/src/assets/images/dest_barcelona_quarter_1794467680665.jpg',
+    image: '/assets/images/dest_barcelona_quarter_1794467680665.jpg',
     tag: 'Gothic Quarter & Tapas'
   }
 ];
@@ -53,9 +71,65 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
   // Step 1: Basics
   const [destination, setDestination] = useState('Tokyo, Japan');
   const [durationDays, setDurationDays] = useState(3);
+  const [startDate, setStartDate] = useState(() => {
+    // Default to a date 2 weeks ahead or default 2026-11-20
+    const today = new Date();
+    const future = new Date(today);
+    future.setDate(today.getDate() + 14);
+    const y = future.getFullYear();
+    const m = String(future.getMonth() + 1).padStart(2, '0');
+    const d = String(future.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  });
   const [groupMode, setGroupMode] = useState(true);
   const [targetBudget, setTargetBudget] = useState<BudgetTier>('moderate');
   const [travelStyle, setTravelStyle] = useState('Balanced Culture & Local Gastronomy');
+
+  // Date manipulation helpers
+  const addDays = (dateStr: string, days: number): string => {
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+    d.setDate(d.getDate() + days);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+
+  const formatTripDatesPreview = (start: string, days: number): string => {
+    try {
+      const parts = start.split('-');
+      if (parts.length === 3) {
+        const s = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        const e = new Date(s);
+        e.setDate(s.getDate() + (days - 1));
+        const sStr = s.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const eStr = e.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        return `${sStr} – ${eStr}`;
+      }
+    } catch {
+      // fallback
+    }
+    return `${start} (${days} days)`;
+  };
+
+  const formatDayLabel = (dateStr: string, dayIndex: number): string => {
+    try {
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        d.setDate(d.getDate() + dayIndex);
+        const weekday = d.toLocaleDateString('en-US', { weekday: 'short' });
+        const month = d.toLocaleDateString('en-US', { month: 'short' });
+        const day = d.getDate();
+        return `Day ${dayIndex + 1} (${weekday}, ${month} ${day})`;
+      }
+    } catch {
+      // fallback
+    }
+    return `Day ${dayIndex + 1}`;
+  };
 
   // Step 2: Traveler Profiles
   const [travelers, setTravelers] = useState<TravelerProfile[]>([
@@ -179,7 +253,7 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
     }, 1200);
 
     setTimeout(() => {
-      setGenerationStage('Generating customized route with Gemini 3.8 Flash...');
+      setGenerationStage('Finalizing customized daily schedule and timings...');
     }, 2400);
 
     try {
@@ -198,13 +272,20 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
 
       const result = await response.json();
       if (result.success && result.data) {
+        const computedEndDate = addDays(startDate, durationDays - 1);
+        const daysWithDates = (result.data.days || []).map((day: any, idx: number) => ({
+          ...day,
+          dayNumber: idx + 1,
+          date: formatDayLabel(startDate, idx)
+        }));
+
         const trip: TripPlan = {
           id: `trip-${Date.now()}`,
           title: `${destination} ${durationDays}-Day ${groupMode ? 'Friend Odyssey' : 'Solo Journey'}`,
           destination,
           groupMode,
-          startDate: '2026-11-20',
-          endDate: '2026-11-23',
+          startDate,
+          endDate: computedEndDate,
           durationDays,
           targetBudget,
           travelStyle,
@@ -215,7 +296,7 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
             sharedInterests: ['Food & Culture', 'Scenic Views'],
             compromisePace: 'Moderate'
           },
-          days: result.data.days,
+          days: daysWithDates,
           createdAt: new Date().toISOString(),
           isLiveAI: result.isLiveAI
         };
@@ -313,10 +394,10 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
           <div className="space-y-3">
             <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
               <span>Select Destination</span>
-              <span className="text-[11px] text-slate-400 font-normal">Featured workshop cities</span>
+              <span className="text-[11px] text-slate-400 font-normal">Featured popular destinations</span>
             </label>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {POPULAR_DESTINATIONS.map((d) => {
                 const isSelected = destination === d.name;
                 return (
@@ -366,13 +447,35 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
             </div>
           </div>
 
-          {/* Trip Duration & Budget */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Trip Dates, Duration & Budget */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Departure Date */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>Departure Date</span>
+                </span>
+                <span className="text-[11px] text-indigo-600 font-semibold">
+                  {formatTripDatesPreview(startDate, durationDays)}
+                </span>
+              </label>
+              <div className="relative">
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={e => setStartDate(e.target.value)}
+                  className="w-full px-3.5 py-2 text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:bg-white transition-all text-slate-800"
+                />
+              </div>
+            </div>
+
+            {/* Trip Duration */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                 Trip Duration (Days)
               </label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 {[2, 3, 4, 5, 7].map(num => (
                   <button
                     key={num}
@@ -384,27 +487,28 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
                         : 'border-slate-200 text-slate-700 hover:bg-slate-50'
                     }`}
                   >
-                    {num} Days
+                    {num}d
                   </button>
                 ))}
               </div>
             </div>
 
+            {/* Overall Budget Tier */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                 Overall Budget Tier
               </label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 {[
-                  { id: 'budget', label: '$ Budget', sub: '< $60/day' },
-                  { id: 'moderate', label: '$$ Moderate', sub: '$60-$120/day' },
-                  { id: 'luxury', label: '$$$ Premium', sub: '$150+/day' }
+                  { id: 'budget', label: '$ Budget', sub: '<$60' },
+                  { id: 'moderate', label: '$$ Mod', sub: '$60-120' },
+                  { id: 'luxury', label: '$$$ Luxe', sub: '$150+' }
                 ].map(b => (
                   <button
                     key={b.id}
                     type="button"
                     onClick={() => setTargetBudget(b.id as BudgetTier)}
-                    className={`flex-1 py-1.5 px-2 text-center rounded-xl border transition-all ${
+                    className={`flex-1 py-1.5 px-1 text-center rounded-xl border transition-all ${
                       targetBudget === b.id
                         ? 'border-indigo-600 bg-indigo-50 text-indigo-700 ring-1 ring-indigo-600'
                         : 'border-slate-200 text-slate-700 hover:bg-slate-50'
@@ -634,7 +738,7 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
                 className="px-6 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-semibold text-xs sm:text-sm rounded-xl transition-colors shadow-md flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>Generate Itinerary with Gemini</span>
+                <span>Generate Custom Itinerary</span>
               </button>
             </div>
           </div>

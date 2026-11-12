@@ -68,4 +68,52 @@ export interface TripPlan {
   days: DayPlan[];
   createdAt: string;
   isLiveAI?: boolean;
+  bookings?: ActivityBooking[];
+}
+
+export interface ActivityBooking {
+  id: string;
+  activityId?: string;
+  activityTitle: string;
+  destination: string;
+  date: string;
+  timeSlot: string;
+  category: Activity['category'];
+  neighborhood: string;
+  unitPrice: number;
+  participants: {
+    travelerId: string;
+    travelerName: string;
+  }[];
+  totalPrice: number;
+  bookingRef: string;
+  status: 'confirmed' | 'pending' | 'completed';
+  createdAt: string;
+  includedPerks: string[];
+  cancellationPolicy: string;
+  meetingPoint: string;
+  contactEmail: string;
+  qrCodeSeed?: string;
+}
+
+export interface BookableExperience {
+  id: string;
+  title: string;
+  destination: string;
+  category: Activity['category'];
+  duration: string;
+  neighborhood: string;
+  pricePerPerson: number;
+  originalPrice?: number;
+  rating: number;
+  reviewsCount: number;
+  image: string;
+  badge?: string;
+  instantConfirmation: boolean;
+  freeCancellation: boolean;
+  description: string;
+  highlights: string[];
+  availableSlots: string[];
+  included: string[];
+  meetingPoint: string;
 }

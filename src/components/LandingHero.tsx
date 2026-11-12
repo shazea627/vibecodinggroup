@@ -1,27 +1,57 @@
 import React from 'react';
-import { Compass, Users, Sparkles, MapPin, ArrowRight, ShieldCheck, Clock, Route, DollarSign, CloudRain, Check, ChevronRight, Star, Heart } from 'lucide-react';
+import { Compass, Users, Sparkles, MapPin, ArrowRight, ShieldCheck, Clock, Route, DollarSign, CloudRain, Check, ChevronRight, Star, Heart, Ticket } from 'lucide-react';
 
 interface LandingHeroProps {
   onStartNewTrip: () => void;
   onLoadTokyoDemo: () => void;
   onLoadBaliDemo: () => void;
-  onOpenBMC: () => void;
+  onLoadSeoulDemo: () => void;
+  onLoadBangkokDemo: () => void;
+  onLoadShanghaiDemo: () => void;
+  onOpenBookings?: () => void;
 }
 
 const DESTINATION_CARDS = [
   {
     key: 'tokyo',
     name: 'Tokyo, Japan',
-    image: '/src/assets/images/hero_tokyo_twilight_1794467674929.jpg',
+    image: '/assets/images/hero_tokyo_twilight_1794467674929.jpg',
     tag: 'Group Favorite · 3 Days',
     title: 'Neon, Shinto Shrines & Hidden Izakayas',
     vibe: '94% Consensus Match',
     price: '$58 / day'
   },
   {
+    key: 'seoul',
+    name: 'Seoul, South Korea',
+    image: '/assets/images/dest_seoul_hanok_1794470606780.jpg',
+    tag: 'Group Trend · 3 Days',
+    title: 'Hanok Alleys, K-BBQ & Seongsu Design',
+    vibe: '95% Consensus Match',
+    price: '$45 / day'
+  },
+  {
+    key: 'bangkok',
+    name: 'Bangkok, Thailand',
+    image: '/assets/images/dest_bangkok_temple_1794470620264.jpg',
+    tag: 'Riverside & Food · 3 Days',
+    title: 'Gilded Spired Temples, Canals & Chinatown',
+    vibe: '96% Consensus Match',
+    price: '$35 / day'
+  },
+  {
+    key: 'shanghai',
+    name: 'Shanghai, China',
+    image: '/assets/images/dest_shanghai_bund_1794470633976.jpg',
+    tag: 'Art & Heritage · 3 Days',
+    title: 'The Bund Waterfront & Sycamore Tree Avenues',
+    vibe: '93% Consensus Match',
+    price: '$48 / day'
+  },
+  {
     key: 'bali',
     name: 'Ubud & Canggu, Bali',
-    image: '/src/assets/images/dest_bali_ubud_1794467676019.jpg',
+    image: '/assets/images/dest_bali_ubud_1794467676019.jpg',
     tag: 'Solo Retreat · 3 Days',
     title: 'Emerald Rice Terraces & Sound Healing',
     vibe: '100% Personal Flow',
@@ -30,7 +60,7 @@ const DESTINATION_CARDS = [
   {
     key: 'paris',
     name: 'Paris & Marais, France',
-    image: '/src/assets/images/dest_paris_terrace_1794467676789.jpg',
+    image: '/assets/images/dest_paris_terrace_1794467676789.jpg',
     tag: 'Couples & Foodies · 3 Days',
     title: 'Artisanal Roasteries, Galleries & Bistros',
     vibe: '92% Shared Vibe',
@@ -39,7 +69,7 @@ const DESTINATION_CARDS = [
   {
     key: 'barcelona',
     name: 'Barcelona, Spain',
-    image: '/src/assets/images/dest_barcelona_quarter_1794467680665.jpg',
+    image: '/assets/images/dest_barcelona_quarter_1794467680665.jpg',
     tag: 'Friends & Culture · 4 Days',
     title: 'Gothic Quarter Tapas & Modernist Architecture',
     vibe: '96% Consensus Match',
@@ -51,7 +81,10 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   onStartNewTrip,
   onLoadTokyoDemo,
   onLoadBaliDemo,
-  onOpenBMC
+  onLoadSeoulDemo,
+  onLoadBangkokDemo,
+  onLoadShanghaiDemo,
+  onOpenBookings
 }) => {
   return (
     <div className="space-y-20 pb-20">
@@ -64,7 +97,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           <div className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-rose-50 border border-rose-200/80 rounded-full text-xs font-semibold text-rose-900 shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-rose-600" />
-              <span>Next-Gen Travel Engine · Miro Workshop Edition</span>
+              <span>Intelligent Travel Engine · Built for Friends & Solo Trips</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight font-display text-balance leading-[1.12]">
@@ -72,7 +105,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </h1>
 
             <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
-              VibeVoyage reconciles conflicting friend styles, eliminates zigzagging routes, matches budgets privately, and generates realistic daily itineraries powered by Gemini.
+              VibeVoyage reconciles conflicting friend styles, eliminates zigzagging routes, matches budgets privately, and generates realistic daily itineraries tailored to your group.
             </p>
 
             {/* CTAs */}
@@ -91,29 +124,32 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 className="px-5 py-3.5 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm rounded-xl border border-slate-300 shadow-sm transition-colors flex items-center gap-2"
               >
                 <Users className="w-4 h-4 text-indigo-600" />
-                <span>Load Tokyo Group Demo</span>
+                <span>Load Tokyo Sample Trip</span>
               </button>
 
-              <button
-                onClick={onOpenBMC}
-                className="px-4 py-3.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-sm rounded-xl border border-indigo-200 transition-colors"
-              >
-                Inspect Miro BMC
-              </button>
+              {onOpenBookings && (
+                <button
+                  onClick={onOpenBookings}
+                  className="px-5 py-3.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 font-semibold text-sm rounded-xl border border-indigo-200 shadow-sm transition-colors flex items-center gap-2"
+                >
+                  <Ticket className="w-4 h-4 text-indigo-600" />
+                  <span>Book Activities</span>
+                </button>
+              )}
             </div>
 
             {/* Quiet Trust Bar */}
             <div className="pt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-500 font-medium">
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600" /> Free instant prototype
+                <Check className="w-3.5 h-3.5 text-emerald-600" /> Free to use
               </span>
               <span aria-hidden="true" className="text-slate-300">·</span>
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600" /> In-browser saved state
+                <Check className="w-3.5 h-3.5 text-emerald-600" /> Auto-saved trips
               </span>
               <span aria-hidden="true" className="text-slate-300">·</span>
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600" /> Powered by Gemini 3.8
+                <Check className="w-3.5 h-3.5 text-emerald-600" /> Smart Route Optimization
               </span>
             </div>
           </div>
@@ -122,7 +158,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           <div className="lg:col-span-5 relative">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 group">
               <img
-                src="/src/assets/images/hero_tokyo_twilight_1794467674929.jpg"
+                src="/assets/images/hero_tokyo_twilight_1794467674929.jpg"
                 alt="Tokyo Twilight Skyline with Izakaya"
                 referrerPolicy="no-referrer"
                 className="w-full h-[420px] sm:h-[480px] object-cover transition-transform duration-700 group-hover:scale-105"
@@ -185,13 +221,16 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {DESTINATION_CARDS.map((dest) => (
             <div
               key={dest.key}
               onClick={() => {
                 if (dest.key === 'tokyo') onLoadTokyoDemo();
                 else if (dest.key === 'bali') onLoadBaliDemo();
+                else if (dest.key === 'seoul') onLoadSeoulDemo();
+                else if (dest.key === 'bangkok') onLoadBangkokDemo();
+                else if (dest.key === 'shanghai') onLoadShanghaiDemo();
                 else onStartNewTrip();
               }}
               className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-lg hover:border-slate-300 transition-all cursor-pointer group flex flex-col"
@@ -294,7 +333,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             <div className="lg:col-span-6 relative">
               <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
                 <img
-                  src="/src/assets/images/travelers_friends_planning_1794467677172.jpg"
+                  src="/assets/images/travelers_friends_planning_1794467677172.jpg"
                   alt="Friends planning travel together"
                   referrerPolicy="no-referrer"
                   className="w-full h-80 sm:h-96 object-cover"
@@ -306,17 +345,17 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         </div>
       </section>
 
-      {/* 4 Core Value Propositions from Miro Canvas */}
+      {/* 4 Core Value Propositions */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">
             Value Propositions
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold font-display text-slate-900">
-            Engineered from the Miro Business Model Canvas
+            Built to Solve Real Travel Planning Problems
           </h2>
           <p className="text-sm text-slate-600">
-            Directly addressing the pain points identified by our workshop research.
+            Directly addressing group coordination, routing, and budget friction.
           </p>
         </div>
 
@@ -369,7 +408,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </div>
             <h3 className="font-bold text-base text-slate-900">Adaptive In-Trip Replanning</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              When it pours rain or someone wakes up late, don't scrap your day. Tap 1 button and Gemini reconfigures your day with cozy indoor gems.
+              When it pours rain or someone wakes up late, don't scrap your day. Tap 1 button and VibeVoyage instantly reconfigures your day with cozy indoor gems.
             </p>
             <div className="pt-2 text-[11px] text-slate-500 font-medium border-t border-slate-100 flex items-center justify-between">
               <span>Rain & sleep-in modes</span>
