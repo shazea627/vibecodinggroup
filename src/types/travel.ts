@@ -14,12 +14,23 @@ export interface TravelerProfile {
   mustHaves: string;
 }
 
+export type ActivityCategory = 
+  | 'culture' 
+  | 'food' 
+  | 'nature' 
+  | 'art' 
+  | 'nightlife' 
+  | 'shopping' 
+  | 'sightseeing'
+  | 'transport'
+  | 'lodging';
+
 export interface Activity {
   id: string;
   time: string;
   title: string;
   description: string;
-  category: 'culture' | 'food' | 'nature' | 'art' | 'nightlife' | 'shopping' | 'sightseeing';
+  category: ActivityCategory;
   cost: number;
   duration: string;
   neighborhood: string;
@@ -53,6 +64,11 @@ export interface GroupSummary {
   compromisePace: string;
 }
 
+export interface TripBudgetSettings {
+  lodgingPerNight?: number;
+  transportPerPerson?: number;
+}
+
 export interface TripPlan {
   id: string;
   title: string;
@@ -68,4 +84,5 @@ export interface TripPlan {
   days: DayPlan[];
   createdAt: string;
   isLiveAI?: boolean;
+  budgetSettings?: TripBudgetSettings;
 }

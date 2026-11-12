@@ -13,6 +13,10 @@ export const sampleTrips: Record<string, TripPlan> = {
     travelStyle: 'Balanced Culture, Gastronomy & Urban Exploration',
     createdAt: '2026-11-10T08:00:00.000Z',
     isLiveAI: true,
+    budgetSettings: {
+      lodgingPerNight: 95,
+      transportPerPerson: 35
+    },
     travelers: [
       {
         id: 'user-1',
@@ -69,8 +73,24 @@ export const sampleTrips: Record<string, TripPlan> = {
           icon: 'sun'
         },
         estimatedWalkingKm: 5.8,
-        estimatedBudgetPerPerson: 58,
+        estimatedBudgetPerPerson: 78,
         activities: [
+          {
+            id: 'act-1-0',
+            time: '08:45 AM',
+            title: 'Keisei Skyliner Express & 72-Hour Tokyo Subway Pass',
+            description: 'Pick up pre-booked unlimited Tokyo Metro/Toei Subway transit passes and direct train tickets into central Ueno and Asakusa.',
+            category: 'transport',
+            cost: 20,
+            duration: '45 min',
+            neighborhood: 'Narita / Asakusa',
+            vibe: 'Seamless Transit',
+            suggestedBy: 'Sam Taylor',
+            votes: 3,
+            userVoted: true,
+            notes: 'Includes unlimited transit across all 13 central subway lines for the entire 3 days.',
+            transitToNext: '5 min walk to Kaminarimon'
+          },
           {
             id: 'act-1-1',
             time: '09:30 AM',
@@ -288,6 +308,10 @@ export const sampleTrips: Record<string, TripPlan> = {
     travelStyle: 'Wellness, Nature & Coastal Culture',
     createdAt: '2026-11-09T10:00:00.000Z',
     isLiveAI: true,
+    budgetSettings: {
+      lodgingPerNight: 65,
+      transportPerPerson: 25
+    },
     travelers: [
       {
         id: 'solo-1',

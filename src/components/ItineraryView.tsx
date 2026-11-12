@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { 
   TripPlan, 
   Activity, 
-  DayPlan 
+  DayPlan,
+  ActivityCategory 
 } from '../types/travel';
+import { BudgetBreakdownChart } from './BudgetBreakdownChart';
 import { 
   MapPin, 
   Clock, 
@@ -58,7 +60,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
   const [newDesc, setNewDesc] = useState('');
   const [newTime, setNewTime] = useState('02:00 PM');
   const [newCost, setNewCost] = useState('15');
-  const [newCategory, setNewCategory] = useState<Activity['category']>('sightseeing');
+  const [newCategory, setNewCategory] = useState<ActivityCategory>('sightseeing');
   const [newNeighborhood, setNewNeighborhood] = useState('Central District');
 
   const currentDay = trip.days.find(d => d.dayNumber === selectedDayNumber) || trip.days[0];
@@ -476,7 +478,9 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                 art: 'bg-purple-50 text-purple-700 border-purple-200',
                 nightlife: 'bg-indigo-50 text-indigo-700 border-indigo-200',
                 shopping: 'bg-cyan-50 text-cyan-700 border-cyan-200',
-                sightseeing: 'bg-blue-50 text-blue-700 border-blue-200'
+                sightseeing: 'bg-blue-50 text-blue-700 border-blue-200',
+                transport: 'bg-sky-50 text-sky-700 border-sky-200',
+                lodging: 'bg-violet-50 text-violet-700 border-violet-200'
               };
 
               return (
@@ -666,19 +670,25 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
         </div>
       )}
 
-      {/* TAB 3: Shared Expenses & Split Cost Calculator */}
+      {/* TAB 3: Shared Expenses & Split Cost Calculator with Recharts Donut */}
       {activeTab === 'expenses' && (
         <div className="space-y-6">
+          {/* Recharts Donut Chart Component */}
+          <BudgetBreakdownChart
+            trip={trip}
+            onUpdateTrip={onUpdateTrip}
+          />
+
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs">
             <div>
               <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">
-                Transparent Budget Tracker
+                Schedule Activity Subtotals
               </span>
               <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 mt-1">
-                Trip Expense & Group Split Breakdown
+                Day-by-Day Activity Split
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                Itemized calculations based on scheduled meals, admissions, and estimated transit.
+                Direct cost of admissions, dining, and sightseeing mapped across your {trip.durationDays}-day schedule.
               </p>
             </div>
 
@@ -764,15 +774,33 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1">
                   <label className="font-bold text-slate-700">Time</label>
                   <input
                     type="text"
                     value={editingActivity.time}
                     onChange={e => setEditingActivity({ ...editingActivity, time: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-slate-900 font-mono"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-slate-900 font-mono"
                   />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700">Category</label>
+                  <select
+                    value={editingActivity.category}
+                    onChange={e => setEditingActivity({ ...editingActivity, category: e.target.value as any })}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-slate-900 bg-white"
+                  >
+                    <option value="sightseeing">Sightseeing</option>
+                    <option value="culture">Culture</option>
+                    <option value="food">Food & Dining</option>
+                    <option value="transport">Transport</option>
+                    <option value="lodging">Lodging</option>
+                    <option value="art">Art & Museum</option>
+                    <option value="nature">Nature</option>
+                    <option value="shopping">Shopping</option>
+                    <option value="nightlife">Nightlife</option>
+                  </select>
                 </div>
                 <div className="space-y-1">
                   <label className="font-bold text-slate-700">Cost ($/person)</label>
@@ -780,7 +808,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                     type="number"
                     value={editingActivity.cost}
                     onChange={e => setEditingActivity({ ...editingActivity, cost: Number(e.target.value) || 0 })}
-                    className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-slate-900"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-slate-900"
                   />
                 </div>
               </div>
@@ -882,6 +910,8 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                     <option value="sightseeing">Sightseeing</option>
                     <option value="culture">Culture</option>
                     <option value="food">Food & Dining</option>
+                    <option value="transport">Transit & Transport</option>
+                    <option value="lodging">Lodging & Hotel</option>
                     <option value="art">Art & Museum</option>
                     <option value="nature">Nature</option>
                     <option value="shopping">Shopping</option>
