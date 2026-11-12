@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { 
   TripPlan, 
   Activity, 
-  DayPlan,
-  ActivityCategory 
+  DayPlan 
 } from '../types/travel';
-import { BudgetBreakdownChart } from './BudgetBreakdownChart';
 import { 
   MapPin, 
   Clock, 
@@ -31,19 +29,24 @@ import {
   ChevronRight,
   Sun,
   X,
-  Compass
+  Compass,
+  Ticket
 } from 'lucide-react';
 
 interface ItineraryViewProps {
   trip: TripPlan;
   onUpdateTrip: (updated: TripPlan) => void;
   onNewTrip: () => void;
+  onBookActivity?: (activity: Activity) => void;
+  onViewAllBookings?: () => void;
 }
 
 export const ItineraryView: React.FC<ItineraryViewProps> = ({
   trip,
   onUpdateTrip,
-  onNewTrip
+  onNewTrip,
+  onBookActivity,
+  onViewAllBookings
 }) => {
   const [selectedDayNumber, setSelectedDayNumber] = useState(1);
   const [activeTab, setActiveTab] = useState<'timeline' | 'consensus' | 'expenses'>('timeline');
@@ -60,7 +63,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
   const [newDesc, setNewDesc] = useState('');
   const [newTime, setNewTime] = useState('02:00 PM');
   const [newCost, setNewCost] = useState('15');
-  const [newCategory, setNewCategory] = useState<ActivityCategory>('sightseeing');
+  const [newCategory, setNewCategory] = useState<Activity['category']>('sightseeing');
   const [newNeighborhood, setNewNeighborhood] = useState('Central District');
 
   const currentDay = trip.days.find(d => d.dayNumber === selectedDayNumber) || trip.days[0];
@@ -70,6 +73,12 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
   let headerImage = '/src/assets/images/dest_barcelona_quarter_1794467680665.jpg';
   if (destLower.includes('tokyo') || destLower.includes('japan')) {
     headerImage = '/src/assets/images/hero_tokyo_twilight_1794467674929.jpg';
+  } else if (destLower.includes('seoul') || destLower.includes('korea')) {
+    headerImage = '/src/assets/images/dest_seoul_hanok_1794470606780.jpg';
+  } else if (destLower.includes('bangkok') || destLower.includes('thailand')) {
+    headerImage = '/src/assets/images/dest_bangkok_temple_1794470620264.jpg';
+  } else if (destLower.includes('shanghai') || destLower.includes('china')) {
+    headerImage = '/src/assets/images/dest_shanghai_bund_1794470633976.jpg';
   } else if (destLower.includes('bali') || destLower.includes('indonesia')) {
     headerImage = '/src/assets/images/dest_bali_ubud_1794467676019.jpg';
   } else if (destLower.includes('paris') || destLower.includes('france')) {
@@ -215,73 +224,20 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
         })
       });
 
-      if (response.ok) {
-        const res = await response.json();
-        if (res.success && res.day) {
-          const updatedDays = trip.days.map(d =>
-            d.dayNumber === selectedDayNumber ? res.day : d
-          );
-          onUpdateTrip({ ...trip, days: updatedDays });
-          setAdaptNotice(`Day ${selectedDayNumber} successfully adapted!`);
-          setTimeout(() => setAdaptNotice(null), 3500);
-          return;
-        }
+      const res = await response.json();
+      if (res.success && res.day) {
+        const updatedDays = trip.days.map(d =>
+          d.dayNumber === selectedDayNumber ? res.day : d
+        );
+        onUpdateTrip({ ...trip, days: updatedDays });
+        setAdaptNotice(`Day ${selectedDayNumber} successfully adapted!`);
+        setTimeout(() => setAdaptNotice(null), 3500);
       }
     } catch (err) {
-      console.warn('Backend replan endpoint unreachable, applying client adaptation:', err);
+      console.error('Failed to replan day:', err);
     } finally {
       setIsAdapting(false);
     }
-
-    // Client-side fallback adaptation for static deployments
-    const modifiedActivities = currentDay.activities.map((act, idx) => {
-      if (conditionType === 'rain') {
-        if (act.category === 'nature' || act.category === 'sightseeing') {
-          return {
-            ...act,
-            title: `[Indoor Safe] ${act.neighborhood} Art Gallery & Covered Arcade`,
-            description: 'Protected from the rain: Explore historic covered market halls, artisan workshops, and modern indoor galleries.',
-            category: 'art' as const,
-            notes: 'Rain-adapted indoor replacement.',
-            vibe: 'Cozy & Sheltered'
-          };
-        }
-      } else if (conditionType === 'slow_morning') {
-        if (idx === 0) {
-          return {
-            ...act,
-            time: '10:45 AM',
-            title: `Leisurely Brunch & ${act.title.replace(/^\[.*?\]\s*/, '')}`,
-            description: 'Sleep in and recharge: Enjoy specialty brew coffee and breakfast pastries before kicking off the day.',
-            duration: '1.5 hrs',
-            notes: 'Pushed later to match relaxed group rhythm.'
-          };
-        } else if (idx === 1) return { ...act, time: '01:15 PM' };
-        else if (idx === 2) return { ...act, time: '03:45 PM' };
-        else if (idx === 3) return { ...act, time: '07:30 PM' };
-      } else if (conditionType === 'budget_trim') {
-        return {
-          ...act,
-          cost: Math.max(0, Math.round(act.cost * 0.5)),
-          notes: 'Optimized for budget efficiency.'
-        };
-      }
-      return act;
-    });
-
-    const adaptedDay = {
-      ...currentDay,
-      title: conditionType === 'rain' ? `${currentDay.title} (Rain-Safe Edition)` : currentDay.title,
-      estimatedBudgetPerPerson: modifiedActivities.reduce((acc, a) => acc + (a.cost || 0), 0),
-      activities: modifiedActivities
-    };
-
-    const updatedDays = trip.days.map(d =>
-      d.dayNumber === selectedDayNumber ? adaptedDay : d
-    );
-    onUpdateTrip({ ...trip, days: updatedDays });
-    setAdaptNotice(`Day ${selectedDayNumber} successfully adapted!`);
-    setTimeout(() => setAdaptNotice(null), 3500);
   };
 
   // Total trip cost per person calculation
@@ -344,6 +300,21 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
               <Share2 className="w-4 h-4 text-slate-200" />
               <span>Share & Export</span>
             </button>
+
+            {onViewAllBookings && (
+              <button
+                onClick={onViewAllBookings}
+                className="px-4 py-2.5 bg-indigo-600/90 hover:bg-indigo-600 text-white backdrop-blur-md font-semibold text-xs sm:text-sm rounded-xl transition-colors shadow-md flex items-center gap-2"
+              >
+                <Ticket className="w-4 h-4 text-white" />
+                <span>Book Activities</span>
+                {trip.bookings && trip.bookings.length > 0 && (
+                  <span className="w-5 h-5 rounded-full bg-white text-indigo-700 text-[10px] font-bold flex items-center justify-center">
+                    {trip.bookings.length}
+                  </span>
+                )}
+              </button>
+            )}
 
             <button
               onClick={onNewTrip}
@@ -531,9 +502,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                 art: 'bg-purple-50 text-purple-700 border-purple-200',
                 nightlife: 'bg-indigo-50 text-indigo-700 border-indigo-200',
                 shopping: 'bg-cyan-50 text-cyan-700 border-cyan-200',
-                sightseeing: 'bg-blue-50 text-blue-700 border-blue-200',
-                transport: 'bg-sky-50 text-sky-700 border-sky-200',
-                lodging: 'bg-violet-50 text-violet-700 border-violet-200'
+                sightseeing: 'bg-blue-50 text-blue-700 border-blue-200'
               };
 
               return (
@@ -575,15 +544,31 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                         </div>
                       )}
 
-                      {/* Travel Attribution Tag */}
-                      <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px]">
-                        <span className="text-slate-500 font-medium">
-                          Inspired by: <span className="text-slate-900 font-semibold">{act.suggestedBy}</span>
-                        </span>
-                        <span className="text-slate-300">·</span>
-                        <span className="text-slate-500">
-                          Cost: <span className="font-semibold text-slate-900">{act.cost === 0 ? 'Free' : `$${act.cost} / person`}</span>
-                        </span>
+                      {/* Travel Attribution Tag & Booking CTA */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-[11px]">
+                        <div className="flex items-center gap-3">
+                          <span className="text-slate-500 font-medium">
+                            Inspired by: <span className="text-slate-900 font-semibold">{act.suggestedBy}</span>
+                          </span>
+                          <span className="text-slate-300">·</span>
+                          <span className="text-slate-500">
+                            Cost: <span className="font-semibold text-slate-900">{act.cost === 0 ? 'Free' : `$${act.cost} / person`}</span>
+                          </span>
+                        </div>
+
+                        {onBookActivity && act.cost > 0 && (
+                          <button
+                            onClick={() => onBookActivity(act)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-semibold border border-indigo-200 transition-colors shadow-2xs"
+                          >
+                            <Ticket className="w-3.5 h-3.5" />
+                            <span>
+                              {trip.bookings?.some(b => b.activityId === act.id || b.activityTitle.includes(act.title))
+                                ? 'Pass Booked'
+                                : 'Book Passes'}
+                            </span>
+                          </button>
+                        )}
                       </div>
                     </div>
 
@@ -723,25 +708,19 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
         </div>
       )}
 
-      {/* TAB 3: Shared Expenses & Split Cost Calculator with Recharts Donut */}
+      {/* TAB 3: Shared Expenses & Split Cost Calculator */}
       {activeTab === 'expenses' && (
         <div className="space-y-6">
-          {/* Recharts Donut Chart Component */}
-          <BudgetBreakdownChart
-            trip={trip}
-            onUpdateTrip={onUpdateTrip}
-          />
-
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs">
             <div>
               <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">
-                Schedule Activity Subtotals
+                Transparent Budget Tracker
               </span>
               <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 mt-1">
-                Day-by-Day Activity Split
+                Trip Expense & Group Split Breakdown
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                Direct cost of admissions, dining, and sightseeing mapped across your {trip.durationDays}-day schedule.
+                Itemized calculations based on scheduled meals, admissions, and estimated transit.
               </p>
             </div>
 
@@ -827,33 +806,15 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="font-bold text-slate-700">Time</label>
                   <input
                     type="text"
                     value={editingActivity.time}
                     onChange={e => setEditingActivity({ ...editingActivity, time: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-slate-900 font-mono"
+                    className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-slate-900 font-mono"
                   />
-                </div>
-                <div className="space-y-1">
-                  <label className="font-bold text-slate-700">Category</label>
-                  <select
-                    value={editingActivity.category}
-                    onChange={e => setEditingActivity({ ...editingActivity, category: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-slate-900 bg-white"
-                  >
-                    <option value="sightseeing">Sightseeing</option>
-                    <option value="culture">Culture</option>
-                    <option value="food">Food & Dining</option>
-                    <option value="transport">Transport</option>
-                    <option value="lodging">Lodging</option>
-                    <option value="art">Art & Museum</option>
-                    <option value="nature">Nature</option>
-                    <option value="shopping">Shopping</option>
-                    <option value="nightlife">Nightlife</option>
-                  </select>
                 </div>
                 <div className="space-y-1">
                   <label className="font-bold text-slate-700">Cost ($/person)</label>
@@ -861,7 +822,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                     type="number"
                     value={editingActivity.cost}
                     onChange={e => setEditingActivity({ ...editingActivity, cost: Number(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-slate-900"
+                    className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-slate-900"
                   />
                 </div>
               </div>
@@ -963,8 +924,6 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
                     <option value="sightseeing">Sightseeing</option>
                     <option value="culture">Culture</option>
                     <option value="food">Food & Dining</option>
-                    <option value="transport">Transit & Transport</option>
-                    <option value="lodging">Lodging & Hotel</option>
                     <option value="art">Art & Museum</option>
                     <option value="nature">Nature</option>
                     <option value="shopping">Shopping</option>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Compass, Users, User, Calendar, DollarSign, Sparkles, Plus, Trash2, ArrowRight, ArrowLeft, Check, Heart, Coffee, Moon, Sun, AlertTriangle, MapPin } from 'lucide-react';
 import { TravelerProfile, TripPlan, BudgetTier, TravelPace } from '../types/travel';
-import { createFallbackTripPlan } from '../data/sampleTrips';
 
 interface TripWizardProps {
   onComplete: (trip: TripPlan) => void;
@@ -16,6 +15,24 @@ const POPULAR_DESTINATIONS = [
     tag: 'Culture, Neon & Food'
   },
   { 
+    name: 'Seoul, South Korea', 
+    days: 3, 
+    image: '/src/assets/images/dest_seoul_hanok_1794470606780.jpg',
+    tag: 'Hanok Alleys & K-BBQ'
+  },
+  { 
+    name: 'Bangkok, Thailand', 
+    days: 3, 
+    image: '/src/assets/images/dest_bangkok_temple_1794470620264.jpg',
+    tag: 'Golden Temples & River'
+  },
+  { 
+    name: 'Shanghai, China', 
+    days: 3, 
+    image: '/src/assets/images/dest_shanghai_bund_1794470633976.jpg',
+    tag: 'The Bund & French Concession'
+  },
+  { 
     name: 'Ubud & Canggu, Bali', 
     days: 3, 
     image: '/src/assets/images/dest_bali_ubud_1794467676019.jpg',
@@ -25,7 +42,7 @@ const POPULAR_DESTINATIONS = [
     name: 'Paris & Marais, France', 
     days: 3, 
     image: '/src/assets/images/dest_paris_terrace_1794467676789.jpg',
-    tag: 'Cafes, Art & Architecture'
+    tag: 'Cafes, Art & Bistros'
   },
   { 
     name: 'Barcelona, Spain', 
@@ -197,52 +214,39 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
         })
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success && result.data) {
-          const trip: TripPlan = {
-            id: `trip-${Date.now()}`,
-            title: `${destination} ${durationDays}-Day ${groupMode ? 'Friend Odyssey' : 'Solo Journey'}`,
-            destination,
-            groupMode,
-            startDate: '2026-11-20',
-            endDate: '2026-11-23',
-            durationDays,
-            targetBudget,
-            travelStyle,
-            travelers,
-            groupSummary: result.data.groupSummary || {
-              consensusScore: '92% Match',
-              reconciliationNotes: 'Balanced mornings, grouped shared food stops, and scenic afternoons.',
-              sharedInterests: ['Food & Culture', 'Scenic Views'],
-              compromisePace: 'Moderate'
-            },
-            days: result.data.days,
-            createdAt: new Date().toISOString(),
-            isLiveAI: result.isLiveAI
-          };
+      const result = await response.json();
+      if (result.success && result.data) {
+        const trip: TripPlan = {
+          id: `trip-${Date.now()}`,
+          title: `${destination} ${durationDays}-Day ${groupMode ? 'Friend Odyssey' : 'Solo Journey'}`,
+          destination,
+          groupMode,
+          startDate: '2026-11-20',
+          endDate: '2026-11-23',
+          durationDays,
+          targetBudget,
+          travelStyle,
+          travelers,
+          groupSummary: result.data.groupSummary || {
+            consensusScore: '92% Match',
+            reconciliationNotes: 'Balanced mornings, grouped shared food stops, and scenic afternoons.',
+            sharedInterests: ['Food & Culture', 'Scenic Views'],
+            compromisePace: 'Moderate'
+          },
+          days: result.data.days,
+          createdAt: new Date().toISOString(),
+          isLiveAI: result.isLiveAI
+        };
 
-          setIsGenerating(false);
-          onComplete(trip);
-          return;
-        }
+        setIsGenerating(false);
+        onComplete(trip);
+        return;
       }
     } catch (err) {
-      console.warn('Backend itinerary generation endpoint unreachable, activating client generator:', err);
+      console.error('Error in itinerary generation:', err);
     }
 
-    // Seamless client-side fallback generation if backend is unavailable
-    const fallbackTrip = createFallbackTripPlan(
-      destination,
-      durationDays,
-      travelers,
-      groupMode,
-      targetBudget,
-      travelStyle
-    );
-
     setIsGenerating(false);
-    onComplete(fallbackTrip);
   };
 
   return (
@@ -330,7 +334,7 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
               <span className="text-[11px] text-slate-400 font-normal">Featured workshop cities</span>
             </label>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {POPULAR_DESTINATIONS.map((d) => {
                 const isSelected = destination === d.name;
                 return (

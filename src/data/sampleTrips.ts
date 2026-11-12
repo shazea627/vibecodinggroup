@@ -13,10 +13,6 @@ export const sampleTrips: Record<string, TripPlan> = {
     travelStyle: 'Balanced Culture, Gastronomy & Urban Exploration',
     createdAt: '2026-11-10T08:00:00.000Z',
     isLiveAI: true,
-    budgetSettings: {
-      lodgingPerNight: 95,
-      transportPerPerson: 35
-    },
     travelers: [
       {
         id: 'user-1',
@@ -73,24 +69,8 @@ export const sampleTrips: Record<string, TripPlan> = {
           icon: 'sun'
         },
         estimatedWalkingKm: 5.8,
-        estimatedBudgetPerPerson: 78,
+        estimatedBudgetPerPerson: 58,
         activities: [
-          {
-            id: 'act-1-0',
-            time: '08:45 AM',
-            title: 'Keisei Skyliner Express & 72-Hour Tokyo Subway Pass',
-            description: 'Pick up pre-booked unlimited Tokyo Metro/Toei Subway transit passes and direct train tickets into central Ueno and Asakusa.',
-            category: 'transport',
-            cost: 20,
-            duration: '45 min',
-            neighborhood: 'Narita / Asakusa',
-            vibe: 'Seamless Transit',
-            suggestedBy: 'Sam Taylor',
-            votes: 3,
-            userVoted: true,
-            notes: 'Includes unlimited transit across all 13 central subway lines for the entire 3 days.',
-            transitToNext: '5 min walk to Kaminarimon'
-          },
           {
             id: 'act-1-1',
             time: '09:30 AM',
@@ -308,10 +288,6 @@ export const sampleTrips: Record<string, TripPlan> = {
     travelStyle: 'Wellness, Nature & Coastal Culture',
     createdAt: '2026-11-09T10:00:00.000Z',
     isLiveAI: true,
-    budgetSettings: {
-      lodgingPerNight: 65,
-      transportPerPerson: 25
-    },
     travelers: [
       {
         id: 'solo-1',
@@ -517,143 +493,806 @@ export const sampleTrips: Record<string, TripPlan> = {
         ]
       }
     ]
+  },
+  seoul: {
+    id: 'seoul-group-2026',
+    title: 'Seoul 3-Day Friend Odyssey: Hanok Alleys, K-Food & Seongsu Chic',
+    destination: 'Seoul, South Korea',
+    groupMode: true,
+    startDate: '2026-11-20',
+    endDate: '2026-11-22',
+    durationDays: 3,
+    targetBudget: 'moderate',
+    travelStyle: 'Historic Palaces, Street Food Markets & Modern K-Design',
+    createdAt: '2026-11-10T08:00:00.000Z',
+    isLiveAI: true,
+    travelers: [
+      {
+        id: 'user-s1',
+        name: 'Min-Jun Park',
+        avatar: 'MP',
+        color: 'from-rose-500 to-red-600',
+        pace: 'fast_paced',
+        budget: 'moderate',
+        interests: ['Local Street Food & Markets', 'Nightlife & Craft Bars', 'Indie Shopping & Fashion'],
+        foodPreference: 'K-BBQ, tteokbokki, and craft makgeolli',
+        wakeUpTime: '09:30 AM (Moderate)',
+        mustHaves: 'Gwangjang Market bindaetteok and vibrant Hongdae street buskers'
+      },
+      {
+        id: 'user-s2',
+        name: 'Chloe Dubois',
+        avatar: 'CD',
+        color: 'from-amber-500 to-orange-600',
+        pace: 'balanced',
+        budget: 'moderate',
+        interests: ['Historic Temples & Shrines', 'Architecture & Design', 'Coffee Roasters & Cafes'],
+        foodPreference: 'Artisanal cafe pastries & temple food',
+        wakeUpTime: '08:00 AM (Early Bird)',
+        mustHaves: 'Bukchon Hanok quiet morning walk and Seongsu industrial cafe'
+      },
+      {
+        id: 'user-s3',
+        name: 'David Kim',
+        avatar: 'DK',
+        color: 'from-blue-500 to-indigo-600',
+        pace: 'relaxed',
+        budget: 'budget',
+        interests: ['Scenic Viewpoints & Sunsets', 'Nature Hikes & Parks', 'Modern Art & Museums'],
+        foodPreference: 'Hearty warm soups & convenience store kimbap',
+        wakeUpTime: '09:00 AM (Moderate)',
+        mustHaves: 'N Seoul Tower sunset panoramic skyline'
+      }
+    ],
+    groupSummary: {
+      consensusScore: '95% Match',
+      reconciliationNotes: 'Harmonized Chloe’s morning architectural passion with Min-Jun’s evening foodie appetite and David’s sunset viewpoint must-have. Days are clustered strictly by subway line to avoid long transfers.',
+      sharedInterests: ['K-Gastronomy', 'Hanok Architecture', 'City Panoramas'],
+      compromisePace: 'Moderate (Balanced 4-stop rhythm with generous cafe respites)'
+    },
+    days: [
+      {
+        dayNumber: 1,
+        date: 'Day 1: Historic Heart & Hanok Charm',
+        title: 'Gyeongbokgung Palace, Bukchon Hanok & Gwangjang Market',
+        areaSummary: 'Jongno-gu & Insadong',
+        weather: { condition: 'Crisp & Sunny', temp: '18°C', icon: 'sun' },
+        estimatedWalkingKm: 6.2,
+        estimatedBudgetPerPerson: 42,
+        activities: [
+          {
+            id: 'seo-1-1',
+            time: '09:00 AM',
+            title: 'Gyeongbokgung Royal Guard Changing & Grand Pavilion',
+            description: 'Witness the colorful royal changing of the guard ceremony at Gwanghwamun gate and explore the tranquil Hyangwonjeong pond pavilion.',
+            category: 'culture',
+            cost: 3,
+            duration: '2 hrs',
+            neighborhood: 'Jongno',
+            vibe: 'Dynastic Splendor',
+            suggestedBy: 'Chloe Dubois',
+            votes: 3,
+            notes: 'Free entry if wearing traditional Hanbok; early arrival avoids group tour coaches.',
+            transitToNext: '10 min walk'
+          },
+          {
+            id: 'seo-1-2',
+            time: '11:30 AM',
+            title: 'Bukchon Hanok Village & Tea Garden in an 80-Year Old Courtyard',
+            description: 'Stroll winding stone alleys between restored Joseon-era tiled roofs, then sip iced omija (five-flavor berry) tea in a peaceful courtyard.',
+            category: 'sightseeing',
+            cost: 8,
+            duration: '1.5 hrs',
+            neighborhood: 'Bukchon',
+            vibe: 'Traditional Serenity',
+            suggestedBy: 'Chloe Dubois',
+            votes: 3,
+            notes: 'Please speak quietly out of respect for local Hanok residents.',
+            transitToNext: '15 min via Line 3'
+          },
+          {
+            id: 'seo-1-3',
+            time: '01:30 PM',
+            title: 'Gwangjang Market Street Food Feast (Bindaetteok & Mayak Kimbap)',
+            description: 'Sit on heated bench stalls at Seoul’s century-old market savoring sizzling crispy mung bean pancakes, hand-rolled mini kimbap, and kalguksu noodle bowls.',
+            category: 'food',
+            cost: 14,
+            duration: '1.5 hrs',
+            neighborhood: 'Dongdaemun / Jongno 5-ga',
+            vibe: 'Bustling Gastronomy',
+            suggestedBy: 'Min-Jun Park',
+            votes: 4,
+            notes: 'Cash and T-Money card friendly; try the freshly fried twisted donuts (kkwabaegi).',
+            transitToNext: '10 min walk to Cheonggyecheon'
+          },
+          {
+            id: 'seo-1-4',
+            time: '06:00 PM',
+            title: 'Ikseon-dong Hanok Alleyways & Craft Makgeolli Bistro',
+            description: 'Atmospheric maze of 1920s hanoks converted into bespoke candle shops, indie bakeries, and neon-lit craft Korean rice wine parlors.',
+            category: 'nightlife',
+            cost: 25,
+            duration: '2.5 hrs',
+            neighborhood: 'Ikseon-dong',
+            vibe: 'Retro Hip',
+            suggestedBy: 'Min-Jun Park',
+            votes: 3,
+            notes: 'Pair honeycomb sparkling makgeolli with seafood pajeon pancake.',
+            transitToNext: 'Line 1 back to hotel'
+          }
+        ]
+      },
+      {
+        dayNumber: 2,
+        date: 'Day 2: Creative Seongsu & Sunset Heights',
+        title: 'Seongsu-dong "Brooklyn of Seoul" & N Seoul Tower Sunset',
+        areaSummary: 'Seongdong-gu & Namsan',
+        weather: { condition: 'Clear Sky', temp: '20°C', icon: 'sun' },
+        estimatedWalkingKm: 7.1,
+        estimatedBudgetPerPerson: 55,
+        activities: [
+          {
+            id: 'seo-2-1',
+            time: '10:00 AM',
+            title: 'Seongsu Red-Brick Industrial Warehouse Cafes & Design Pop-ups',
+            description: 'Explore repurposed shoe factories now hosting global flagship concept stores like Dior Seongsu, Daelim Changgo gallery cafe, and indie perfume studios.',
+            category: 'shopping',
+            cost: 12,
+            duration: '2.5 hrs',
+            neighborhood: 'Seongsu-dong',
+            vibe: 'Industrial Chic',
+            suggestedBy: 'Chloe Dubois',
+            votes: 3,
+            notes: 'Try salt bread at Jayeondo and specialty brew at Cafe Onion.',
+            transitToNext: '15 min via Line 2'
+          },
+          {
+            id: 'seo-2-2',
+            time: '01:00 PM',
+            title: 'Charcoal K-BBQ Pork Belly (Samgyeopsal) & Cold Naengmyeon',
+            description: 'Grill thick-cut aged pork belly on tabletop cast iron with kimchi, ssamjang dip, and ice-cold buckwheat noodles.',
+            category: 'food',
+            cost: 22,
+            duration: '1.5 hrs',
+            neighborhood: 'Wangsimni / Seongsu',
+            vibe: 'Sizzling Sensation',
+            suggestedBy: 'Min-Jun Park',
+            votes: 4,
+            notes: 'Wrapped in perilla and lettuce leaves with grilled garlic.',
+            transitToNext: '20 min bus to Namsan base'
+          },
+          {
+            id: 'seo-2-3',
+            time: '04:30 PM',
+            title: 'Namsan Mountain Cable Car & N Seoul Tower Sunset Deck',
+            description: 'Glid up Mount Namsan in glass cable car to watch sunset paint the Han River and Seoul’s endless sea of high-rises in violet and gold.',
+            category: 'sightseeing',
+            cost: 15,
+            duration: '2 hrs',
+            neighborhood: 'Namsan',
+            vibe: 'Panoramic Skyline',
+            suggestedBy: 'David Kim',
+            votes: 4,
+            notes: 'Arrive 45 mins before official sundown to secure railing spots.',
+            transitToNext: '15 min bus down to Myeongdong'
+          },
+          {
+            id: 'seo-2-4',
+            time: '07:30 PM',
+            title: 'Myeongdong Night Market & Korean Fried Chicken with Chimaek',
+            description: 'Stroll illuminated street food stalls sampling grilled lobster tail and hotteok pancakes, followed by crisp double-fried chicken and draught beer.',
+            category: 'food',
+            cost: 18,
+            duration: '2 hrs',
+            neighborhood: 'Myeongdong',
+            vibe: 'Vibrant Night Feast',
+            suggestedBy: 'Min-Jun Park',
+            votes: 3,
+            notes: 'BBD (bburinkle seasoned chicken) is a group crowd-pleaser.',
+            transitToNext: 'Subway to stay'
+          }
+        ]
+      },
+      {
+        dayNumber: 3,
+        date: 'Day 3: Futuristic Architecture & Youth Culture',
+        title: 'Dongdaemun Design Plaza, Leeum Museum & Hongdae Sunset',
+        areaSummary: 'Dongdaemun & Mapo-gu',
+        weather: { condition: 'Pleasant & Mild', temp: '19°C', icon: 'sun' },
+        estimatedWalkingKm: 5.8,
+        estimatedBudgetPerPerson: 38,
+        activities: [
+          {
+            id: 'seo-3-1',
+            time: '09:30 AM',
+            title: 'Zaha Hadid’s Dongdaemun Design Plaza (DDP) Architecture Walk',
+            description: 'Wander through the undulating curvilinear aluminum facades of DDP and the hidden rooftop green park.',
+            category: 'art',
+            cost: 0,
+            duration: '2 hrs',
+            neighborhood: 'Dongdaemun',
+            vibe: 'Futuristic Wonder',
+            suggestedBy: 'Chloe Dubois',
+            votes: 3,
+            notes: 'Incredible optical illusion photo spots along the spiraling white stairs.',
+            transitToNext: '15 min via Line 6 to Hangangjin'
+          },
+          {
+            id: 'seo-3-2',
+            time: '12:30 PM',
+            title: 'Leeum Samsung Museum of Art & Hannam-dong Designer Cafes',
+            description: 'Admire antique celadon pottery juxtaposed against Giacometti sculptures, followed by hand-drip coffee in Seoul’s trendiest diplomatic hill.',
+            category: 'art',
+            cost: 12,
+            duration: '2 hrs',
+            neighborhood: 'Hannam-dong',
+            vibe: 'High Culture & Coffee',
+            suggestedBy: 'David Kim',
+            votes: 3,
+            notes: 'Book free permanent exhibition tickets online in advance.',
+            transitToNext: '20 min via Line 6 to Hongdae'
+          },
+          {
+            id: 'seo-3-3',
+            time: '04:00 PM',
+            title: 'Hongdae Indie Vinyl Stores & Yeonnam-dong Central Park Stroll',
+            description: 'Browse vintage records, indie artist prints, and watch spontaneous acoustic and K-pop busking along Gyeongui Line Book Street.',
+            category: 'shopping',
+            cost: 5,
+            duration: '2.5 hrs',
+            neighborhood: 'Hongdae & Yeonnam',
+            vibe: 'Youth Energy',
+            suggestedBy: 'Min-Jun Park',
+            votes: 4,
+            notes: 'Great spot to pick up quirky souvenirs made by local art students.',
+            transitToNext: '5 min walk'
+          },
+          {
+            id: 'seo-3-4',
+            time: '07:30 PM',
+            title: 'Farewell Pojangmacha (Orange Tent Street Bar) & Spicy Tteokbokki',
+            description: 'Communal plastic stool dining under weather-protected orange tents sipping soju paired with spicy stir-fried rice cakes and fish cake broth.',
+            category: 'nightlife',
+            cost: 18,
+            duration: '2 hrs',
+            neighborhood: 'Sinchon / Hongdae',
+            vibe: 'Heartfelt K-Drama Finale',
+            suggestedBy: 'Min-Jun Park',
+            votes: 4,
+            notes: 'Hot fishcake broth (odeng guk) is served complimentary and bottomless.',
+            transitToNext: 'Transit to airport / stay'
+          }
+        ]
+      }
+    ]
+  },
+  bangkok: {
+    id: 'bangkok-group-2026',
+    title: 'Bangkok 3-Day Sensory Odyssey: Golden Temples, Canals & Night Bazaars',
+    destination: 'Bangkok, Thailand',
+    groupMode: true,
+    startDate: '2026-11-20',
+    endDate: '2026-11-22',
+    durationDays: 3,
+    targetBudget: 'budget',
+    travelStyle: 'Historic Riverscapes, Street Gastronomy & Night Markets',
+    createdAt: '2026-11-10T08:00:00.000Z',
+    isLiveAI: true,
+    travelers: [
+      {
+        id: 'user-b1',
+        name: 'Tara Sukhumvit',
+        avatar: 'TS',
+        color: 'from-amber-500 to-orange-600',
+        pace: 'balanced',
+        budget: 'budget',
+        interests: ['Local Street Food & Markets', 'Nightlife & Craft Bars', 'Architecture & Design'],
+        foodPreference: 'Pad Thai, Tom Yum Goong, and green mango with sweet fish sauce',
+        wakeUpTime: '08:30 AM (Moderate)',
+        mustHaves: 'Yaowarat Chinatown nighttime neon food stalls'
+      },
+      {
+        id: 'user-b2',
+        name: 'Liam Scott',
+        avatar: 'LS',
+        color: 'from-emerald-500 to-teal-600',
+        pace: 'relaxed',
+        budget: 'moderate',
+        interests: ['Historic Temples & Shrines', 'Scenic Viewpoints & Sunsets', 'Coffee Roasters & Cafes'],
+        foodPreference: 'Fresh tropical fruit smoothies & coconut curries',
+        wakeUpTime: '07:30 AM (Early Bird)',
+        mustHaves: 'Sunrise or sunset over Wat Arun on Chao Phraya river'
+      },
+      {
+        id: 'user-b3',
+        name: 'Elena Rostova',
+        avatar: 'ER',
+        color: 'from-cyan-500 to-blue-600',
+        pace: 'fast_paced',
+        budget: 'budget',
+        interests: ['Indie Shopping & Fashion', 'Modern Art & Museums', 'Nature Hikes & Parks'],
+        foodPreference: 'Vegetarian Som Tum papaya salad & mango sticky rice',
+        wakeUpTime: '09:00 AM (Moderate)',
+        mustHaves: 'Longtail canal boat tour through hidden Thonburi waterways'
+      }
+    ],
+    groupSummary: {
+      consensusScore: '96% Match',
+      reconciliationNotes: 'Balanced early temple visits before equatorial midday heat with late-afternoon riverside respites and legendary nocturnal street food crawls.',
+      sharedInterests: ['Thai Street Food', 'River Transit', 'Intricate Temples'],
+      compromisePace: 'Moderate (Chao Phraya Express boat hops instead of traffic jams)'
+    },
+    days: [
+      {
+        dayNumber: 1,
+        date: 'Day 1: Sacred Temples & River Crossings',
+        title: 'Grand Palace, Wat Pho Reclining Buddha & Wat Arun Sunset',
+        areaSummary: 'Rattanakosin & Thonburi',
+        weather: { condition: 'Sunny & Tropical', temp: '31°C', icon: 'sun' },
+        estimatedWalkingKm: 5.5,
+        estimatedBudgetPerPerson: 36,
+        activities: [
+          {
+            id: 'bkk-1-1',
+            time: '08:30 AM',
+            title: 'Wat Phra Kaew & Grand Palace Gilded Spires',
+            description: 'Marvel at Thailand’s most sacred temple complex housing the Emerald Buddha carved from a single piece of jade.',
+            category: 'culture',
+            cost: 15,
+            duration: '2.5 hrs',
+            neighborhood: 'Old City (Rattanakosin)',
+            vibe: 'Gilded Wonder',
+            suggestedBy: 'Liam Scott',
+            votes: 4,
+            notes: 'Strict dress code: shoulders and knees must be covered.',
+            transitToNext: '10 min walk'
+          },
+          {
+            id: 'bkk-1-2',
+            time: '11:30 AM',
+            title: 'Wat Pho Giant Reclining Buddha & Traditional Thai Massage',
+            description: 'Stand beside the 46-meter golden gilded reclining Buddha, followed by a 30-minute authentic massage at the birthplace of Thai medical massage.',
+            category: 'culture',
+            cost: 12,
+            duration: '2 hrs',
+            neighborhood: 'Tha Tien',
+            vibe: 'Peaceful Mindfulness',
+            suggestedBy: 'Liam Scott',
+            votes: 3,
+            notes: 'Drop 108 coins into bronze bowls for good karma and serenity.',
+            transitToNext: '5 min cross-river ferry (5 THB)'
+          },
+          {
+            id: 'bkk-1-3',
+            time: '02:00 PM',
+            title: 'Tha Tien Pier Riverside Cafe & Crab Fried Rice Lunch',
+            description: 'Air-conditioned wooden shophouse overlooking the river serving fragrant wok-tossed crab meat fried rice and iced Thai milk tea.',
+            category: 'food',
+            cost: 9,
+            duration: '1 hr',
+            neighborhood: 'Tha Tien Pier',
+            vibe: 'Riverside Charm',
+            suggestedBy: 'Tara Sukhumvit',
+            votes: 3,
+            notes: 'Optimal escape from midday tropical heat.',
+            transitToNext: '5 min walk across to Wat Arun'
+          },
+          {
+            id: 'bkk-1-4',
+            time: '05:30 PM',
+            title: 'Wat Arun (Temple of Dawn) Golden Hour & Rooftop Deck',
+            description: 'Climb the ceramic mosaic porcelain prang of Wat Arun, then watch it glow gold from a cross-river rooftop deck as wooden barges pass.',
+            category: 'sightseeing',
+            cost: 10,
+            duration: '2.5 hrs',
+            neighborhood: 'Thonburi & Riverside',
+            vibe: 'Twilight Magic',
+            suggestedBy: 'Liam Scott',
+            votes: 4,
+            notes: 'Best sunset photography angle in all of Bangkok.',
+            transitToNext: 'River boat to Sathorn'
+          }
+        ]
+      },
+      {
+        dayNumber: 2,
+        date: 'Day 2: Secret Canals & Chinatown Neon',
+        title: 'Thonburi Longtail Canal Cruise, Talat Noi & Yaowarat Night Feast',
+        areaSummary: 'Thonburi, Talat Noi & Chinatown',
+        weather: { condition: 'Warm Breeze', temp: '32°C', icon: 'sun' },
+        estimatedWalkingKm: 4.8,
+        estimatedBudgetPerPerson: 32,
+        activities: [
+          {
+            id: 'bkk-2-1',
+            time: '09:00 AM',
+            title: 'Private Longtail Wooden Boat Tour through Thonburi Klongs',
+            description: 'Zip through Bangkok’s historic labyrinth of waterways observing traditional stilt houses, orchid orchards, and monitor lizards basking in sun.',
+            category: 'nature',
+            cost: 14,
+            duration: '2 hrs',
+            neighborhood: 'Bangkok Yai Canals',
+            vibe: 'Old Siam Discovery',
+            suggestedBy: 'Elena Rostova',
+            votes: 4,
+            notes: 'Chartered wooden boat directly from Sathorn Pier.',
+            transitToNext: 'Express boat to Marine Department Pier'
+          },
+          {
+            id: 'bkk-2-2',
+            time: '11:45 AM',
+            title: 'Talat Noi Shophouse Graffiti Walk & Mother Roaster Coffee',
+            description: 'Wander past automotive spare part alleys turned street art galleries, stopping at a rustic timber loft for iced cold-brew coffee.',
+            category: 'art',
+            cost: 5,
+            duration: '2 hrs',
+            neighborhood: 'Talat Noi',
+            vibe: 'Heritage Indie',
+            suggestedBy: 'Elena Rostova',
+            votes: 3,
+            notes: 'Visit Rong Kuak Chinese Shrine tucked inside the narrow alleyways.',
+            transitToNext: '10 min walk into Chinatown'
+          },
+          {
+            id: 'bkk-2-3',
+            time: '06:00 PM',
+            title: 'Yaowarat Chinatown Neon Street Food Safari',
+            description: 'Bustling red neon road lined with pushcarts: fiery pepper broth pork noodle soup (Guay Jub), freshly grilled jumbo river prawns, and toasted milk buns.',
+            category: 'food',
+            cost: 16,
+            duration: '3 hrs',
+            neighborhood: 'Yaowarat Chinatown',
+            vibe: 'Sensory Culinary Rush',
+            suggestedBy: 'Tara Sukhumvit',
+            votes: 4,
+            notes: 'Michelin bib gourmand roll noodle stall Kuay Jab Nay Lek is unforgettable.',
+            transitToNext: 'MRT Wat Mangkon back to hotel'
+          }
+        ]
+      },
+      {
+        dayNumber: 3,
+        date: 'Day 3: Modern Design & Sky-High Farewell',
+        title: 'Jim Thompson Silk House, Lumphini Park & IconSiam Water Screen',
+        areaSummary: 'Siam, Silom & Riverside',
+        weather: { condition: 'Partly Cloudy', temp: '30°C', icon: 'sun' },
+        estimatedWalkingKm: 5.2,
+        estimatedBudgetPerPerson: 35,
+        activities: [
+          {
+            id: 'bkk-3-1',
+            time: '09:30 AM',
+            title: 'Jim Thompson House Museum & Tropical Jungle Courtyard',
+            description: 'Exquisite enclave of six traditional teakwood Thai houses surrounded by lush palms and lotus ponds, displaying Southeast Asian antiquities.',
+            category: 'culture',
+            cost: 7,
+            duration: '2 hrs',
+            neighborhood: 'Siam',
+            vibe: 'Teakwood Oasis',
+            suggestedBy: 'Liam Scott',
+            votes: 3,
+            notes: 'Guided tour reveals the legendary mystery of Jim Thompson.',
+            transitToNext: '15 min via BTS Skytrain'
+          },
+          {
+            id: 'bkk-3-2',
+            time: '12:30 PM',
+            title: 'SookSiam Indoor Floating Market & Mango Sticky Rice',
+            description: 'Air-conditioned recreation of Thailand’s four culinary regions featuring floating wooden sampans frying pad thai and pouring coconut ice cream.',
+            category: 'food',
+            cost: 11,
+            duration: '2 hrs',
+            neighborhood: 'IconSiam Riverside',
+            vibe: 'Sensory Food Playground',
+            suggestedBy: 'Tara Sukhumvit',
+            votes: 3,
+            notes: 'Perfect mix of comfort and regional Thai specialties.',
+            transitToNext: '10 min river shuttle'
+          },
+          {
+            id: 'bkk-3-3',
+            time: '04:30 PM',
+            title: 'Lumphini Park Tropical Lake Stroll with Water Monitor Lizards',
+            description: 'Relax in Bangkok’s central green lung watching giant friendly monitor lizards swim peacefully across the lagoon with high-rises behind.',
+            category: 'nature',
+            cost: 0,
+            duration: '1.5 hrs',
+            neighborhood: 'Silom / Sathorn',
+            vibe: 'Urban Wildlife Escape',
+            suggestedBy: 'Elena Rostova',
+            votes: 3,
+            notes: 'Rent a swan paddle boat for 40 THB.',
+            transitToNext: '10 min walk to Mahanakhon'
+          },
+          {
+            id: 'bkk-3-4',
+            time: '07:00 PM',
+            title: 'King Power Mahanakhon Glass SkyWalk Panorama',
+            description: 'Walk on transparent glass floor 314 meters above Bangkok’s luminous grid with 360-degree views and chilled live DJ vibes.',
+            category: 'sightseeing',
+            cost: 25,
+            duration: '2 hrs',
+            neighborhood: 'Chong Nonsi',
+            vibe: 'Dazzling Finale',
+            suggestedBy: 'Liam Scott',
+            votes: 4,
+            notes: 'Shoe covers provided; thrilling finale for the group.',
+            transitToNext: 'BTS to airport / hotel'
+          }
+        ]
+      }
+    ]
+  },
+  shanghai: {
+    id: 'shanghai-group-2026',
+    title: 'Shanghai 3-Day Friend Odyssey: Historic Bund, French Concession & Art M50',
+    destination: 'Shanghai, China',
+    groupMode: true,
+    startDate: '2026-11-20',
+    endDate: '2026-11-22',
+    durationDays: 3,
+    targetBudget: 'moderate',
+    travelStyle: 'Colonial Bund Grandeur, Art Deco Alleys & Futuristic Skyline',
+    createdAt: '2026-11-10T08:00:00.000Z',
+    isLiveAI: true,
+    travelers: [
+      {
+        id: 'user-sh1',
+        name: 'Grace Zhang',
+        avatar: 'GZ',
+        color: 'from-amber-500 to-orange-600',
+        pace: 'balanced',
+        budget: 'moderate',
+        interests: ['Local Street Food & Markets', 'Michelin & Fine Dining', 'Indie Shopping & Fashion'],
+        foodPreference: 'Authentic soup dumplings (xiaolongbao), shengjianbao & scallion oil noodles',
+        wakeUpTime: '09:00 AM (Moderate)',
+        mustHaves: 'Jia Jia Tang Bao soup dumplings and Xintiandi shikumen architecture'
+      },
+      {
+        id: 'user-sh2',
+        name: 'Oliver Vance',
+        avatar: 'OV',
+        color: 'from-purple-500 to-indigo-600',
+        pace: 'fast_paced',
+        budget: 'moderate',
+        interests: ['Modern Art & Museums', 'Architecture & Design', 'Historic Temples & Shrines'],
+        foodPreference: 'Artisanal roastery pour-overs & modern Jiangnan fusion',
+        wakeUpTime: '08:00 AM (Early Bird)',
+        mustHaves: 'M50 art district and French Concession sycamore plane tree avenues'
+      },
+      {
+        id: 'user-sh3',
+        name: 'Lucas Rossi',
+        avatar: 'LR',
+        color: 'from-blue-500 to-teal-600',
+        pace: 'relaxed',
+        budget: 'budget',
+        interests: ['Scenic Viewpoints & Sunsets', 'Nightlife & Craft Bars', 'Nature Hikes & Parks'],
+        foodPreference: 'Affordable noodle bowls & craft beer',
+        wakeUpTime: '10:00 AM (Late Riser)',
+        mustHaves: 'The Bund illuminated skyline night view across to Pudong'
+      }
+    ],
+    groupSummary: {
+      consensusScore: '93% Match',
+      reconciliationNotes: 'Reconciled early architectural strolls beneath the London plane trees with leisurely late-morning dumpling brunches and spectacular riverfront twilight vantage points.',
+      sharedInterests: ['Architecture & Design', 'Dumplings & Street Food', 'Skyline Vistas'],
+      compromisePace: 'Moderate (Subway line 2 & 10 connectivity minimizes walking fatigue)'
+    },
+    days: [
+      {
+        dayNumber: 1,
+        date: 'Day 1: Dynastic Heritage & Grand Bund',
+        title: 'Yu Garden Classical Pavilion, Old Town & The Bund Waterfront',
+        areaSummary: 'Huangpu & The Bund',
+        weather: { condition: 'Pleasant & Crisp', temp: '17°C', icon: 'sun' },
+        estimatedWalkingKm: 6.0,
+        estimatedBudgetPerPerson: 45,
+        activities: [
+          {
+            id: 'sh-1-1',
+            time: '09:00 AM',
+            title: 'Yu Garden (Yuyuan) Ming Dynasty Classical Garden',
+            description: 'Wander past dramatic dragon walls, winding stone bridges, and koi ponds carved in 1559 during the Ming dynasty.',
+            category: 'culture',
+            cost: 6,
+            duration: '2 hrs',
+            neighborhood: 'Old Town (Nanshi)',
+            vibe: 'Dynastic Poetics',
+            suggestedBy: 'Oliver Vance',
+            votes: 3,
+            notes: 'Cross the Nine-Turn Bridge (Jiuqu Bridge) for great photo perspectives.',
+            transitToNext: '5 min walk'
+          },
+          {
+            id: 'sh-1-2',
+            time: '11:30 AM',
+            title: 'Nanxiang Xiaolongbao & Crispy Shengjian Bao Tasting',
+            description: 'Feast on paper-thin steamed soup dumplings bursting with ginger-infused pork broth, paired with pan-fried crunchy shengjianbao.',
+            category: 'food',
+            cost: 15,
+            duration: '1.5 hrs',
+            neighborhood: 'Yu Garden Bazaar',
+            vibe: 'Dumpling Mastery',
+            suggestedBy: 'Grace Zhang',
+            votes: 4,
+            notes: 'Nibble a tiny hole first to sip the piping hot broth.',
+            transitToNext: '15 min walk to The Bund'
+          },
+          {
+            id: 'sh-1-3',
+            time: '03:00 PM',
+            title: 'The Bund Promenade & Neoclassical Bank Architecture Walk',
+            description: 'Walk the elevated granite promenade along Huangpu River admiring 52 historic European concession buildings facing futuristic Pudong.',
+            category: 'sightseeing',
+            cost: 0,
+            duration: '2.5 hrs',
+            neighborhood: 'The Bund',
+            vibe: 'Historic Concession Grandeur',
+            suggestedBy: 'Lucas Rossi',
+            votes: 4,
+            notes: 'Pop into the Fairmont Peace Hotel lobby to view 1930s Art Deco jazz heritage.',
+            transitToNext: 'Huangpu River Ferry (2 RMB / $0.30)'
+          },
+          {
+            id: 'sh-1-4',
+            time: '06:30 PM',
+            title: 'Pudong Skyline Illumination & Craft Cocktail Lounge',
+            description: 'Watch the entire Pudong financial skyline (Shanghai Tower, Oriental Pearl) illuminate in vibrant neon as river ferries glide below.',
+            category: 'nightlife',
+            cost: 26,
+            duration: '2.5 hrs',
+            neighborhood: 'Waitan / Bund North',
+            vibe: 'Electric Metropolis',
+            suggestedBy: 'Lucas Rossi',
+            votes: 4,
+            notes: 'Lights turn on precisely at 7:00 PM every evening.',
+            transitToNext: 'Line 2 back to hotel'
+          }
+        ]
+      },
+      {
+        dayNumber: 2,
+        date: 'Day 2: French Concession & Shikumen Alleys',
+        title: 'Tree-Lined Wukang Road, Xintiandi & Long Museum West Bund',
+        areaSummary: 'Xuhui & French Concession',
+        weather: { condition: 'Sunny & Crisp', temp: '19°C', icon: 'sun' },
+        estimatedWalkingKm: 6.5,
+        estimatedBudgetPerPerson: 52,
+        activities: [
+          {
+            id: 'sh-2-1',
+            time: '09:30 AM',
+            title: 'Wukang Mansion & Sycamore Tree-Lined French Concession',
+            description: 'Admire French architect László Hudec’s iconic 1924 wedge-shaped flatiron building, strolling tranquil leafy avenues lined with 1930s villas.',
+            category: 'sightseeing',
+            cost: 0,
+            duration: '2 hrs',
+            neighborhood: 'Former French Concession',
+            vibe: 'Art Deco Nostalgia',
+            suggestedBy: 'Oliver Vance',
+            votes: 4,
+            notes: 'Try pistachio ice cream from Corner Deli on Wukang Road.',
+            transitToNext: '10 min walk'
+          },
+          {
+            id: 'sh-2-2',
+            time: '12:00 PM',
+            title: 'Artisanal Cafe Roastery & Scallion Oil Noodles at Canglangting',
+            description: 'Time-honored Shanghai noodles tossed in fragrant crispy scallion oil and dark soy sauce, followed by pour-over Ethiopian single origin.',
+            category: 'food',
+            cost: 12,
+            duration: '1.5 hrs',
+            neighborhood: 'Anfu Road',
+            vibe: 'Neighborhood Chic',
+            suggestedBy: 'Grace Zhang',
+            votes: 3,
+            notes: 'Anfu Road is the epicentre of Shanghai lifestyle design.',
+            transitToNext: '15 min via Line 10'
+          },
+          {
+            id: 'sh-2-3',
+            time: '02:30 PM',
+            title: 'Xintiandi Shikumen Heritage Alleys & Indie Concept Boutiques',
+            description: 'Preserved 19th-century gray-brick stone gate courtyard homes (Shikumen) restored into high-fashion concept galleries and bookstores.',
+            category: 'shopping',
+            cost: 5,
+            duration: '2.5 hrs',
+            neighborhood: 'Xintiandi',
+            vibe: 'Heritage Reinvention',
+            suggestedBy: 'Grace Zhang',
+            votes: 3,
+            notes: 'Visit the Shikumen Open House Museum to experience 1920s Shanghai life.',
+            transitToNext: '20 min metro to West Bund'
+          },
+          {
+            id: 'sh-2-4',
+            time: '06:30 PM',
+            title: 'West Bund Contemporary Art Waterfront & Riverside Dinner',
+            description: 'Converted coal wharf turned modern art mile featuring the Long Museum and West Bund Dome, followed by riverside bistro dining.',
+            category: 'art',
+            cost: 32,
+            duration: '2.5 hrs',
+            neighborhood: 'West Bund (Xuhui Binjiang)',
+            vibe: 'Riverside Modernity',
+            suggestedBy: 'Oliver Vance',
+            votes: 3,
+            notes: 'Industrial concrete vaults lit dramatically at night.',
+            transitToNext: 'Line 11/12 return'
+          }
+        ]
+      },
+      {
+        dayNumber: 3,
+        date: 'Day 3: Contemporary Art & Cloud-High Farewell',
+        title: 'M50 Creative Art District, Jing’an Temple & Shanghai Tower Top',
+        areaSummary: 'Putuo, Jing’an & Lujiazui',
+        weather: { condition: 'Clear', temp: '18°C', icon: 'sun' },
+        estimatedWalkingKm: 5.5,
+        estimatedBudgetPerPerson: 48,
+        activities: [
+          {
+            id: 'sh-3-1',
+            time: '10:00 AM',
+            title: 'M50 Moganshan Road Textile Mill Contemporary Art District',
+            description: 'Former 1930s cotton mills along Suzhou Creek converted into over 120 contemporary art galleries, graffiti walls, and artist studios.',
+            category: 'art',
+            cost: 0,
+            duration: '2.5 hrs',
+            neighborhood: 'Suzhou Creek / Putuo',
+            vibe: 'Avant-Garde Energy',
+            suggestedBy: 'Oliver Vance',
+            votes: 4,
+            notes: 'Check out ShanghART gallery, pioneer of Chinese contemporary art.',
+            transitToNext: '15 min via Line 7 to Jing’an'
+          },
+          {
+            id: 'sh-3-2',
+            time: '01:00 PM',
+            title: 'Jing’an Golden Temple & Vegetarian Buddhist Feast',
+            description: 'Ancient golden-roofed temple standing dramatically in the midst of gleaming modern glass towers, followed by refined temple vegetarian noodles.',
+            category: 'culture',
+            cost: 14,
+            duration: '2 hrs',
+            neighborhood: 'Jing’an',
+            vibe: 'Sacred Contrast',
+            suggestedBy: 'Grace Zhang',
+            votes: 3,
+            notes: 'Toss a lucky coin into the giant bronze incense burner.',
+            transitToNext: '15 min via Line 2 across the river to Lujiazui'
+          },
+          {
+            id: 'sh-3-3',
+            time: '04:30 PM',
+            title: 'Shanghai Tower Top of Shanghai Observatory (118th Floor)',
+            description: 'Ascend world’s second-tallest building at 632 meters in 55-second high-speed elevator for bird’s-eye views above the clouds and Huangpu River bend.',
+            category: 'sightseeing',
+            cost: 28,
+            duration: '2 hrs',
+            neighborhood: 'Lujiazui Financial District',
+            vibe: 'Above the Clouds',
+            suggestedBy: 'Lucas Rossi',
+            votes: 4,
+            notes: 'Watch sunset light up the sprawling megacity below.',
+            transitToNext: '10 min walk'
+          },
+          {
+            id: 'sh-3-4',
+            time: '07:30 PM',
+            title: 'Celebratory Hairy Crab / Modern Shanghainese Feast',
+            description: 'Grand farewell dinner savoring seasonal Jiangnan specialties: braised pork belly in sweet soy (hongshao rou) and steamed hairy crab with ginger tea.',
+            category: 'food',
+            cost: 38,
+            duration: '2 hrs',
+            neighborhood: 'Lujiazui Riverside',
+            vibe: 'Culinary Masterpiece',
+            suggestedBy: 'Grace Zhang',
+            votes: 4,
+            notes: 'Incredible farewell toast overlooking the illuminated Bund across the water.',
+            transitToNext: 'Transit to airport / stay'
+          }
+        ]
+      }
+    ]
   }
 };
-
-export function createFallbackTripPlan(
-  destination: string,
-  durationDays: number,
-  travelers: any[],
-  groupMode: boolean,
-  targetBudget: any = 'moderate',
-  travelStyle: string = 'Balanced Culture & Food'
-): TripPlan {
-  const isTokyo = destination.toLowerCase().includes('tokyo') || destination.toLowerCase().includes('japan');
-  const isBali = destination.toLowerCase().includes('bali') || destination.toLowerCase().includes('indonesia');
-
-  if (isTokyo && sampleTrips.tokyo) {
-    return {
-      ...sampleTrips.tokyo,
-      id: `trip-${Date.now()}`,
-      destination,
-      durationDays,
-      targetBudget,
-      travelStyle,
-      travelers: travelers.length > 0 ? travelers : sampleTrips.tokyo.travelers,
-      days: sampleTrips.tokyo.days.slice(0, durationDays)
-    };
-  }
-
-  if (isBali && sampleTrips.bali) {
-    return {
-      ...sampleTrips.bali,
-      id: `trip-${Date.now()}`,
-      destination,
-      durationDays,
-      targetBudget,
-      travelStyle,
-      travelers: travelers.length > 0 ? travelers : sampleTrips.bali.travelers,
-      days: sampleTrips.bali.days.slice(0, durationDays)
-    };
-  }
-
-  // Generic dynamic destination generator
-  const days = [];
-  const travelerNames = travelers.map(t => t.name || 'Traveler');
-
-  for (let d = 1; d <= durationDays; d++) {
-    days.push({
-      dayNumber: d,
-      date: `Day ${d}`,
-      title: `Day ${d}: ${destination} Heritage, Cuisine & Panoramas`,
-      areaSummary: 'Central & Historic Districts',
-      weather: { condition: 'Sunny & Mild', temp: '21°C / 70°F', icon: 'sun' },
-      estimatedWalkingKm: 5.2 + d * 0.4,
-      estimatedBudgetPerPerson: 55,
-      activities: [
-        {
-          id: `act-${d}-1`,
-          time: '09:30 AM',
-          title: `${destination} Landmark Historic Walking Tour`,
-          description: `Explore the celebrated architectural highlights, pedestrian squares, and heritage streets of ${destination}.`,
-          category: 'culture' as const,
-          cost: 12,
-          duration: '2.5 hrs',
-          neighborhood: 'Old Town',
-          vibe: 'Historic Sights',
-          suggestedBy: travelerNames[0] || 'Traveler 1',
-          votes: 3,
-          notes: 'Great morning introduction to the city.',
-          transitToNext: '10 min walk'
-        },
-        {
-          id: `act-${d}-2`,
-          time: '12:30 PM',
-          title: `Local Food Hall & Artisanal Market Tasting`,
-          description: 'Savor regional specialties, handmade pastries, and seasonal produce from neighborhood market stalls.',
-          category: 'food' as const,
-          cost: 18,
-          duration: '1.5 hrs',
-          neighborhood: 'Market Quarter',
-          vibe: 'Authentic Gastronomy',
-          suggestedBy: travelerNames[1] || 'Traveler 2',
-          votes: 4,
-          notes: 'Accommodates both meat and vegetarian dietary preferences.',
-          transitToNext: '15 min via metro or walk'
-        },
-        {
-          id: `act-${d}-3`,
-          time: '03:00 PM',
-          title: `${destination} Botanical Promenade & Skyline Viewpoint`,
-          description: 'Relaxed afternoon stroll through shaded gardens leading to an open-air panoramic viewpoint.',
-          category: 'nature' as const,
-          cost: 8,
-          duration: '2 hrs',
-          neighborhood: 'Hillside District',
-          vibe: 'Scenic Panorama',
-          suggestedBy: travelerNames[2] || 'Traveler 3',
-          votes: 3,
-          notes: 'Optimal golden hour lighting for photography.',
-          transitToNext: '15 min scenic stroll'
-        },
-        {
-          id: `act-${d}-4`,
-          time: '07:00 PM',
-          title: `Lantern-Lit Bistro Dinner & Evening Social`,
-          description: 'Communal dinner featuring seasonal plates, local refreshments, and acoustic ambiance.',
-          category: 'food' as const,
-          cost: 28,
-          duration: '2.5 hrs',
-          neighborhood: 'Riverside Quarter',
-          vibe: 'Social Celebration',
-          suggestedBy: travelerNames[0] || 'Traveler 1',
-          votes: 4,
-          notes: 'Group table reserved for evening wind-down.',
-          transitToNext: 'Return to hotel'
-        }
-      ]
-    });
-  }
-
-  return {
-    id: `trip-${Date.now()}`,
-    title: `${destination} ${durationDays}-Day ${groupMode ? 'Friend Odyssey' : 'Solo Explorer'}`,
-    destination,
-    groupMode,
-    startDate: '2026-11-20',
-    endDate: '2026-11-23',
-    durationDays,
-    targetBudget,
-    travelStyle,
-    travelers,
-    groupSummary: {
-      consensusScore: '94% Consensus Match',
-      reconciliationNotes: 'Balanced high-energy mornings with relaxed mid-afternoon cafe respites. Group food preferences were prioritized with options for every budget tier.',
-      sharedInterests: ['Local Gastronomy', 'Scenic Viewpoints', 'Historic Neighborhoods'],
-      compromisePace: 'Moderate (Balanced 4-stop rhythm)'
-    },
-    days,
-    createdAt: new Date().toISOString(),
-    isLiveAI: false
-  };
-}

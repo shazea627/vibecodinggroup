@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { TripPlan } from './types/travel';
+import { TripPlan, Activity } from './types/travel';
 import { sampleTrips } from './data/sampleTrips';
 import { Navbar } from './components/Navbar';
 import { LandingHero } from './components/LandingHero';
 import { TripWizard } from './components/TripWizard';
 import { ItineraryView } from './components/ItineraryView';
+import { ActivityBookingPage } from './components/ActivityBookingPage';
 import { Compass, Sparkles, Heart } from 'lucide-react';
 
 const STORAGE_KEY = 'vibevoyage_current_trip';
 
 export default function App() {
-  const [activeView, setActiveView] = useState<'landing' | 'wizard' | 'itinerary'>('landing');
+  const [activeView, setActiveView] = useState<'landing' | 'wizard' | 'itinerary' | 'booking'>('landing');
   const [currentTrip, setCurrentTrip] = useState<TripPlan | null>(null);
+  const [preselectedActivity, setPreselectedActivity] = useState<Activity | null>(null);
+  const [preselectedExperienceId, setPreselectedExperienceId] = useState<string | null>(null);
 
   // Initialize from LocalStorage or default to Tokyo demo
   useEffect(() => {
@@ -61,6 +64,12 @@ export default function App() {
         onGoHome={() => setActiveView('landing')}
         hasActiveTrip={Boolean(currentTrip)}
         onViewActiveTrip={() => setActiveView('itinerary')}
+        onOpenBookings={() => {
+          setPreselectedActivity(null);
+          setPreselectedExperienceId(null);
+          setActiveView('booking');
+        }}
+        bookingCount={currentTrip?.bookings?.length || 0}
         isLiveAI={currentTrip?.isLiveAI ?? true}
       />
 
@@ -71,6 +80,10 @@ export default function App() {
             onStartNewTrip={() => setActiveView('wizard')}
             onLoadTokyoDemo={() => handleLoadSample('tokyo')}
             onLoadBaliDemo={() => handleLoadSample('bali')}
+            onLoadSeoulDemo={() => handleLoadSample('seoul')}
+            onLoadBangkokDemo={() => handleLoadSample('bangkok')}
+            onLoadShanghaiDemo={() => handleLoadSample('shanghai')}
+            onOpenBookings={() => setActiveView('booking')}
           />
         )}
 
@@ -86,6 +99,26 @@ export default function App() {
             trip={currentTrip}
             onUpdateTrip={handleUpdateTrip}
             onNewTrip={() => setActiveView('wizard')}
+            onBookActivity={(act) => {
+              setPreselectedActivity(act);
+              setPreselectedExperienceId(null);
+              setActiveView('booking');
+            }}
+            onViewAllBookings={() => {
+              setPreselectedActivity(null);
+              setPreselectedExperienceId(null);
+              setActiveView('booking');
+            }}
+          />
+        )}
+
+        {activeView === 'booking' && (
+          <ActivityBookingPage
+            trip={currentTrip}
+            onUpdateTrip={handleUpdateTrip}
+            onNavigateToItinerary={() => setActiveView('itinerary')}
+            preselectedActivity={preselectedActivity}
+            preselectedExperienceId={preselectedExperienceId}
           />
         )}
       </main>

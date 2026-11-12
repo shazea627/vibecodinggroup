@@ -1,10 +1,14 @@
 import React from 'react';
-import { Compass, Users, Sparkles, MapPin, ArrowRight, ShieldCheck, Clock, Route, DollarSign, CloudRain, Check, ChevronRight, Star, Heart } from 'lucide-react';
+import { Compass, Users, Sparkles, MapPin, ArrowRight, ShieldCheck, Clock, Route, DollarSign, CloudRain, Check, ChevronRight, Star, Heart, Ticket } from 'lucide-react';
 
 interface LandingHeroProps {
   onStartNewTrip: () => void;
   onLoadTokyoDemo: () => void;
   onLoadBaliDemo: () => void;
+  onLoadSeoulDemo: () => void;
+  onLoadBangkokDemo: () => void;
+  onLoadShanghaiDemo: () => void;
+  onOpenBookings?: () => void;
 }
 
 const DESTINATION_CARDS = [
@@ -16,6 +20,33 @@ const DESTINATION_CARDS = [
     title: 'Neon, Shinto Shrines & Hidden Izakayas',
     vibe: '94% Consensus Match',
     price: '$58 / day'
+  },
+  {
+    key: 'seoul',
+    name: 'Seoul, South Korea',
+    image: '/src/assets/images/dest_seoul_hanok_1794470606780.jpg',
+    tag: 'Group Trend · 3 Days',
+    title: 'Hanok Alleys, K-BBQ & Seongsu Design',
+    vibe: '95% Consensus Match',
+    price: '$45 / day'
+  },
+  {
+    key: 'bangkok',
+    name: 'Bangkok, Thailand',
+    image: '/src/assets/images/dest_bangkok_temple_1794470620264.jpg',
+    tag: 'Riverside & Food · 3 Days',
+    title: 'Gilded Spired Temples, Canals & Chinatown',
+    vibe: '96% Consensus Match',
+    price: '$35 / day'
+  },
+  {
+    key: 'shanghai',
+    name: 'Shanghai, China',
+    image: '/src/assets/images/dest_shanghai_bund_1794470633976.jpg',
+    tag: 'Art & Heritage · 3 Days',
+    title: 'The Bund Waterfront & Sycamore Tree Avenues',
+    vibe: '93% Consensus Match',
+    price: '$48 / day'
   },
   {
     key: 'bali',
@@ -49,7 +80,11 @@ const DESTINATION_CARDS = [
 export const LandingHero: React.FC<LandingHeroProps> = ({
   onStartNewTrip,
   onLoadTokyoDemo,
-  onLoadBaliDemo
+  onLoadBaliDemo,
+  onLoadSeoulDemo,
+  onLoadBangkokDemo,
+  onLoadShanghaiDemo,
+  onOpenBookings
 }) => {
   return (
     <div className="space-y-20 pb-20">
@@ -91,6 +126,16 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 <Users className="w-4 h-4 text-indigo-600" />
                 <span>Load Tokyo Group Demo</span>
               </button>
+
+              {onOpenBookings && (
+                <button
+                  onClick={onOpenBookings}
+                  className="px-5 py-3.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 font-semibold text-sm rounded-xl border border-indigo-200 shadow-sm transition-colors flex items-center gap-2"
+                >
+                  <Ticket className="w-4 h-4 text-indigo-600" />
+                  <span>Book Activities</span>
+                </button>
+              )}
             </div>
 
             {/* Quiet Trust Bar */}
@@ -176,13 +221,16 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {DESTINATION_CARDS.map((dest) => (
             <div
               key={dest.key}
               onClick={() => {
                 if (dest.key === 'tokyo') onLoadTokyoDemo();
                 else if (dest.key === 'bali') onLoadBaliDemo();
+                else if (dest.key === 'seoul') onLoadSeoulDemo();
+                else if (dest.key === 'bangkok') onLoadBangkokDemo();
+                else if (dest.key === 'shanghai') onLoadShanghaiDemo();
                 else onStartNewTrip();
               }}
               className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-lg hover:border-slate-300 transition-all cursor-pointer group flex flex-col"
