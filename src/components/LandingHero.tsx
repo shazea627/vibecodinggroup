@@ -5,6 +5,7 @@ interface LandingHeroProps {
   onStartNewTrip: () => void;
   onLoadTokyoDemo: () => void;
   onLoadBaliDemo: () => void;
+  onOpenBMC: () => void;
 }
 
 const DESTINATION_CARDS = [
@@ -49,7 +50,8 @@ const DESTINATION_CARDS = [
 export const LandingHero: React.FC<LandingHeroProps> = ({
   onStartNewTrip,
   onLoadTokyoDemo,
-  onLoadBaliDemo
+  onLoadBaliDemo,
+  onOpenBMC
 }) => {
   return (
     <div className="space-y-20 pb-20">
@@ -62,7 +64,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           <div className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-rose-50 border border-rose-200/80 rounded-full text-xs font-semibold text-rose-900 shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-rose-600" />
-              <span>Intelligent Travel Engine · Built for Friends & Solo Trips</span>
+              <span>Next-Gen Travel Engine · Miro Workshop Edition</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight font-display text-balance leading-[1.12]">
@@ -90,6 +92,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               >
                 <Users className="w-4 h-4 text-indigo-600" />
                 <span>Load Tokyo Group Demo</span>
+              </button>
+
+              <button
+                onClick={onOpenBMC}
+                className="px-4 py-3.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-sm rounded-xl border border-indigo-200 transition-colors"
+              >
+                Inspect Miro BMC
               </button>
             </div>
 
@@ -297,17 +306,17 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         </div>
       </section>
 
-      {/* 4 Core Value Propositions */}
+      {/* 4 Core Value Propositions from Miro Canvas */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">
             Value Propositions
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold font-display text-slate-900">
-            Built to Solve Real Travel Planning Problems
+            Engineered from the Miro Business Model Canvas
           </h2>
           <p className="text-sm text-slate-600">
-            Directly addressing group coordination, routing, and budget friction.
+            Directly addressing the pain points identified by our workshop research.
           </p>
         </div>
 
