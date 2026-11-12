@@ -138,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center gap-3 shrink-0">
           <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>Gemini 3.8 Flash</span>
+            <span>Smart Route Sync</span>
           </div>
 
           <button

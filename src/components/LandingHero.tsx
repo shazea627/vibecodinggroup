@@ -105,7 +105,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </h1>
 
             <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
-              VibeVoyage reconciles conflicting friend styles, eliminates zigzagging routes, matches budgets privately, and generates realistic daily itineraries powered by Gemini.
+              VibeVoyage reconciles conflicting friend styles, eliminates zigzagging routes, matches budgets privately, and generates realistic daily itineraries tailored to your group.
             </p>
 
             {/* CTAs */}
@@ -124,7 +124,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 className="px-5 py-3.5 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm rounded-xl border border-slate-300 shadow-sm transition-colors flex items-center gap-2"
               >
                 <Users className="w-4 h-4 text-indigo-600" />
-                <span>Load Tokyo Group Demo</span>
+                <span>Load Tokyo Sample Trip</span>
               </button>
 
               {onOpenBookings && (
@@ -141,15 +141,15 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             {/* Quiet Trust Bar */}
             <div className="pt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-500 font-medium">
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600" /> Free instant prototype
+                <Check className="w-3.5 h-3.5 text-emerald-600" /> Free to use
               </span>
               <span aria-hidden="true" className="text-slate-300">·</span>
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600" /> In-browser saved state
+                <Check className="w-3.5 h-3.5 text-emerald-600" /> Auto-saved trips
               </span>
               <span aria-hidden="true" className="text-slate-300">·</span>
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600" /> Powered by Gemini 3.8
+                <Check className="w-3.5 h-3.5 text-emerald-600" /> Smart Route Optimization
               </span>
             </div>
           </div>
@@ -408,7 +408,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </div>
             <h3 className="font-bold text-base text-slate-900">Adaptive In-Trip Replanning</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              When it pours rain or someone wakes up late, don't scrap your day. Tap 1 button and Gemini reconfigures your day with cozy indoor gems.
+              When it pours rain or someone wakes up late, don't scrap your day. Tap 1 button and VibeVoyage instantly reconfigures your day with cozy indoor gems.
             </p>
             <div className="pt-2 text-[11px] text-slate-500 font-medium border-t border-slate-100 flex items-center justify-between">
               <span>Rain & sleep-in modes</span>

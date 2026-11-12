@@ -138,8 +138,8 @@ export default function App() {
             <span>·</span>
             <span className="hover:text-slate-700 cursor-pointer transition-colors">Terms</span>
             <span>·</span>
-            <span className="flex items-center gap-1 text-slate-600 font-medium">
-              Powered by <Sparkles className="w-3 h-3 text-amber-500" /> Gemini 3.8 Flash
+            <span className="flex items-center gap-1.5 text-slate-600 font-medium">
+              <Sparkles className="w-3 h-3 text-amber-500" /> Intelligent Route Optimization
             </span>
           </div>
         </div>

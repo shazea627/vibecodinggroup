@@ -197,7 +197,7 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
     }, 1200);
 
     setTimeout(() => {
-      setGenerationStage('Generating customized route with Gemini 3.8 Flash...');
+      setGenerationStage('Finalizing customized daily schedule and timings...');
     }, 2400);
 
     try {
@@ -331,7 +331,7 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
           <div className="space-y-3">
             <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
               <span>Select Destination</span>
-              <span className="text-[11px] text-slate-400 font-normal">Featured workshop cities</span>
+              <span className="text-[11px] text-slate-400 font-normal">Featured popular destinations</span>
             </label>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -652,7 +652,7 @@ export const TripWizard: React.FC<TripWizardProps> = ({ onComplete, onCancel }) 
                 className="px-6 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-semibold text-xs sm:text-sm rounded-xl transition-colors shadow-md flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>Generate Itinerary with Gemini</span>
+                <span>Generate Custom Itinerary</span>
               </button>
             </div>
           </div>

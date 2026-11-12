@@ -274,12 +274,10 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
               <span className="text-xs font-bold text-emerald-300 bg-emerald-950/60 backdrop-blur-md px-3 py-1 rounded-full border border-emerald-400/30">
                 {trip.groupSummary?.consensusScore || '94% Consensus Match'}
               </span>
-              {trip.isLiveAI && (
-                <span className="text-[11px] font-semibold text-indigo-200 bg-indigo-950/60 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-indigo-400/30 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-amber-400" />
-                  Live Gemini 3.8
-                </span>
-              )}
+              <span className="text-[11px] font-semibold text-indigo-200 bg-indigo-950/60 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-indigo-400/30 flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                Smart Route Sync
+              </span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-white drop-shadow-sm">
