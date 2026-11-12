@@ -78,10 +78,9 @@ export interface TripPlan {
   isLiveAI?: boolean;
   bookings?: ActivityBooking[];
   budgetSettings?: {
-  totalBudget: number;
-  currency: string;
-  categories: Record<string, number>;
-};
+    lodgingPerNight?: number;
+    transportPerPerson?: number;
+  };
 }
 
 export interface ActivityBooking {
