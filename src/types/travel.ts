@@ -1,3 +1,11 @@
+export type ActivityCategory =
+  | 'culture'
+  | 'food'
+  | 'nature'
+  | 'art'
+  | 'nightlife'
+  | 'shopping'
+  | 'sightseeing';
 export type TravelPace = 'relaxed' | 'balanced' | 'fast_paced';
 export type BudgetTier = 'budget' | 'moderate' | 'luxury';
 
@@ -19,7 +27,7 @@ export interface Activity {
   time: string;
   title: string;
   description: string;
-  category: 'culture' | 'food' | 'nature' | 'art' | 'nightlife' | 'shopping' | 'sightseeing';
+  category: ActivityCategory;
   cost: number;
   duration: string;
   neighborhood: string;
@@ -69,6 +77,11 @@ export interface TripPlan {
   createdAt: string;
   isLiveAI?: boolean;
   bookings?: ActivityBooking[];
+  budgetSettings?: {
+  totalBudget: number;
+  currency: string;
+  categories: Record<string, number>;
+};
 }
 
 export interface ActivityBooking {
