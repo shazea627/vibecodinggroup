@@ -4,6 +4,7 @@ import {
   Activity, 
   DayPlan 
 } from '../types/travel';
+import { BudgetBreakdownChart } from './BudgetBreakdownChart';
 import { 
   MapPin, 
   Clock, 
@@ -50,6 +51,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
 }) => {
   const [selectedDayNumber, setSelectedDayNumber] = useState(1);
   const [activeTab, setActiveTab] = useState<'timeline' | 'consensus' | 'expenses'>('timeline');
+  const [showBudgetVisualizerInTimeline, setShowBudgetVisualizerInTimeline] = useState(false);
   
   // Modals
   const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
@@ -570,6 +572,27 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
       {/* TAB 1: Daily Timeline View */}
       {activeTab === 'timeline' && (
         <div className="space-y-6">
+          
+          {/* Budget Chart Toggle */}
+<div>
+  <button
+    type="button"
+    onClick={() => setShowBudgetVisualizerInTimeline(prev => !prev)}
+    className="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold"
+  >
+    {showBudgetVisualizerInTimeline ? 'Hide Budget Chart' : 'Show Budget Chart'}
+  </button>
+</div>
+
+{showBudgetVisualizerInTimeline && (
+  <div className="animate-in fade-in">
+    <BudgetBreakdownChart
+      trip={trip}
+      onUpdateTrip={onUpdateTrip}
+    />
+  </div>
+)}
+          {/* Day Selector Pills Bar */}
           {/* Day Selector Pills Bar with Calendar Dates */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
             {trip.days.map((d, idx) => {
@@ -909,7 +932,11 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({
 
       {/* TAB 3: Shared Expenses & Split Cost Calculator */}
       {activeTab === 'expenses' && (
-        <div className="space-y-6">
+        <div className="space-y-6"> 
+          <BudgetBreakdownChart
+  trip={trip}
+  onUpdateTrip={onUpdateTrip}
+/>         
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs">
             <div>
               <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">
